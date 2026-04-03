@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EU AI Act Risk Classification Assessment Framework | TÜV Rheinland</title>
+
+    <!-- Premium font system -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tuvBlue: '#0071B9',
+                        tuvBlueLight: '#338DCD',
+                        techCyan: '#00C2FF',
+                        appleBg: '#F5F5F7',
+                        charcoal: '#1A1D20',
+                        muted: '#86868B'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    boxShadow: {
+                        'tech': '0 30px 60px -15px rgba(0, 113, 185, 0.12), 0 0 0 1px rgba(0, 113, 185, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.8)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP 3 animation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        /* ================= Base layout and global background ================= */
+        body,
+        html {
+            background-color: var(--appleBg);
+            color: var(--charcoal);
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+            width: 100vw;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tech-grid {
+            position: fixed;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(0, 113, 185, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 113, 185, 0.03) 1px, transparent 1px);
+            z-index: 0;
+            pointer-events: none;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        .hero-mesh-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(at 20% 0%, rgba(0, 113, 185, 0.06) 0px, transparent 40%),
+                radial-gradient(at 80% 100%, rgba(0, 194, 255, 0.08) 0px, transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .custom-scrollbar {
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+            width: 0px;
+            background: transparent;
+        }
+
+        /* ================= Panels and decoration ================= */
+        .instrument-panel {
+            position: relative;
+        }
+
+        .instrument-crosshairs,
+        .instrument-crosshairs-bottom {
+            position: absolute;
+            inset: 1rem;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .instrument-crosshairs::before,
+        .instrument-crosshairs::after,
+        .instrument-crosshairs-bottom::before,
+        .instrument-crosshairs-bottom::after {
+            content: '+';
+            position: absolute;
+            font-family: 'JetBrains Mono';
+            color: #0071B9;
+            opacity: 0.3;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .instrument-crosshairs::before {
+            top: 0;
+            left: 0;
+        }
+
+        .instrument-crosshairs::after {
+            top: 0;
+            right: 0;
+        }
+
+        .instrument-crosshairs-bottom::before {
+            bottom: 0;
+            left: 0;
+        }
+
+        .instrument-crosshairs-bottom::after {
+            bottom: 0;
+            right: 0;
+        }
+
+        .spotlight-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 113, 185, 0.1);
+            border-radius: 1rem;
+            transition: all 0.2s ease-out;
+            overflow: hidden;
+        }
+
+        .spotlight-card .bracket {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono';
+            font-size: 1.2rem;
+            color: #0071B9;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .spotlight-card .bracket.left {
+            left: 1rem;
+            transform: translate(-5px, -50%);
+        }
+
+        .spotlight-card .bracket.right {
+            right: 1rem;
+            transform: translate(5px, -50%);
+        }
+
+        @media (hover: hover) {
+            .spotlight-card:hover {
+                background: #ffffff;
+                border-color: rgba(0, 113, 185, 0.4);
+                box-shadow: 0 8px 20px -6px rgba(0, 113, 185, 0.25), 0 0 0 1px rgba(0, 113, 185, 0.4);
+                transform: translateY(-2px);
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                z-index: 10;
+            }
+
+            .spotlight-card:hover .bracket {
+                opacity: 1;
+                transform: translate(0, -50%);
+                font-weight: bold;
+            }
+        }
+
+        .spotlight-card.active-selected {
+            background: #ffffff;
+            border-color: rgba(0, 113, 185, 0.4);
+            box-shadow: 0 4px 15px -4px rgba(0, 113, 185, 0.3), inset 0 0 0 2px rgba(0, 113, 185, 0.2);
+            transform: translateY(-2px);
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+            z-index: 10;
+        }
+
+        .spotlight-card.active-selected .bracket {
+            opacity: 1;
+            transform: translate(0, -50%);
+            font-weight: bold;
+        }
+
+        .progress-stripes {
+            background-image: linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.15) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, 0.15) 50%,
+                    rgba(255, 255, 255, 0.15) 75%,
+                    transparent 75%,
+                    transparent);
+            background-size: 1rem 1rem;
+            animation: moveStripes 1s linear infinite;
+        }
+
+        @keyframes moveStripes {
+            0% {
+                background-position: 1rem 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        /* Fixed highlight style for key result terms */
+        .risk-italic {
+            font-family: 'Inter', '-apple-system', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            color: #0071B9;
+            background: rgba(0, 113, 185, 0.08);
+            padding: 0 4px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .output-text {
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col">
+
+    <!-- Background layers -->
+    <div class="tech-grid"></div>
+    <div class="hero-mesh-bg"></div>
+
+    <!-- Top status bar -->
+    <header
+        class="relative z-20 h-16 w-full flex items-center justify-between px-6 border-b border-tuvBlue/10 bg-white/40 backdrop-blur-md">
+        <div class="flex items-center gap-4">
+            <div class="relative w-4 h-4 flex items-center justify-center">
+                <div class="absolute inset-0 border border-tuvBlue rounded-sm animate-[spin_4s_linear_infinite]"></div>
+                <div class="w-1.5 h-1.5 bg-tuvBlue rounded-[1px]"></div>
+            </div>
+            <div
+                class="font-display font-bold tracking-tight text-[13px] sm:text-base md:text-lg text-charcoal whitespace-nowrap overflow-hidden text-ellipsis max-w-[58vw] sm:max-w-none">
+                EU AI Act Risk Classification Assessment Framework
+            </div>
+            <div
+                class="hidden md:flex ml-4 pl-4 border-l border-tuvBlue/20 font-mono text-[10px] text-tuvBlue/80 flex-col leading-tight">
+                <span>EU AI Act</span>
+                <span>Risk Classification Assessment Framework</span>
+            </div>
+        </div>
+        <button onclick="resetEngine()"
+            class="flex items-center gap-2 px-4 py-1.5 rounded bg-tuvBlue/5 font-mono text-[11px] tracking-widest uppercase border border-tuvBlue/20 text-tuvBlue hover:bg-tuvBlue hover:text-white transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+            </svg>
+            Restart
+        </button>
+    </header>
+
+    <!-- Main interaction area -->
+    <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8 overflow-hidden">
+
+        <!-- 1. Welcome panel -->
+        <div id="greeting-view"
+            class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/80 backdrop-blur-3xl border border-white rounded-[1.5rem] md:rounded-[2rem] shadow-tech flex flex-col transition-all duration-300">
+            <div class="instrument-crosshairs"></div>
+            <div class="instrument-crosshairs-bottom"></div>
+            <div class="relative z-10 flex flex-col h-full items-center justify-center p-8 md:p-12 text-center">
+                <div class="flex-1 flex flex-col items-center justify-center w-full">
+                    <div class="mb-8 relative">
+                        <div class="absolute inset-0 bg-techCyan/10 blur-xl rounded-full"></div>
+                        <svg class="w-20 h-20 text-tuvBlue relative z-10 mx-auto" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                            <path d="m9 12 2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h1
+                        class="font-display text-[18px] sm:text-[22px] md:text-5xl text-charcoal font-bold tracking-tight mb-4 md:mb-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+                        EU AI Act Risk Classification Assessment Framework
+                    </h1>
+                    <p
+                        class="font-sans text-[14px] md:text-base text-charcoal/70 leading-relaxed max-w-2xl mb-6 md:mb-8 px-2 text-center">
+                        Welcome to the AI Risk Classification Assessment Framework. This framework uses a series of
+                        screening questions to help you preliminarily identify the compliance risk level of your AI
+                        product/service under the EU AI Act.
+                    </p>
+                    <button onclick="startDiagnostic()"
+                        class="group relative px-8 py-4 bg-tuvBlue text-white font-mono font-bold tracking-widest text-sm uppercase rounded shadow-[0_4px_15px_rgba(0,113,185,0.3)] hover:bg-tuvBlueLight hover:-translate-y-1 transition-all overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        </div>
+                        <div class="relative z-10 flex items-center gap-3">
+                            Start Assessment
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"></path>
+                                <path d="m12 5 7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="shrink-0 mt-8 text-center">
+                    <p class="font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        The results of this questionnaire are for reference only and do not constitute any legal opinion
+                        or decision-making basis. TÜV Rheinland assumes no related legal liability. Final conclusions
+                        shall be subject to a comprehensive professional expert assessment.
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        &copy; 2026 TÜV Rheinland. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Question panel -->
+        <div id="console-container"
+            class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/80 backdrop-blur-3xl border border-white rounded-[1.5rem] md:rounded-[2rem] shadow-tech hidden flex flex-col transition-all duration-300">
+            <div class="instrument-crosshairs hidden md:block"></div>
+            <div class="instrument-crosshairs-bottom hidden md:block"></div>
+            <div class="relative z-10 flex flex-col h-full p-4 md:p-10">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shrink-0 border-b border-tuvBlue/10 pb-6">
+                    <div class="flex items-center gap-4">
+                        <button id="btn-back" onclick="goBack()"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded bg-tuvBlue/5 border border-tuvBlue/20 text-tuvBlue font-mono text-[11px] tracking-widest uppercase hover:bg-tuvBlue hover:text-white transition-all duration-300 disabled:opacity-30 disabled:pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m12 19-7-7 7-7" />
+                                <path d="M19 12H5" />
+                            </svg>
+                            Previous Question
+                        </button>
+                    </div>
+                    <div class="w-full md:w-1/3 h-1.5 bg-tuvBlue/10 rounded-full overflow-hidden">
+                        <div id="progress-bar"
+                            class="h-full bg-tuvBlue progress-stripes shadow-[0_0_8px_#00C2FF] transition-all duration-500"
+                            style="width: 16.6%;"></div>
+                    </div>
+                </div>
+
+                <div id="options-container"
+                    class="flex-1 flex flex-col gap-3 custom-scrollbar px-3 -mx-3 pt-2 relative z-20 pb-6 after:content-[''] after:block after:h-8 after:shrink-0">
+                    <div id="question-view" class="mb-4 md:mb-6 shrink-0 mt-2">
+                        <h2 id="question-text"
+                            class="font-display text-[17px] md:text-2xl text-charcoal font-semibold leading-relaxed tracking-tight">
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Result panel -->
+        <div id="result-view"
+            class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/90 backdrop-blur-3xl rounded-[1.5rem] md:rounded-[2rem] border border-tuvBlue/10 shadow-tech hidden flex-col">
+            <div class="instrument-crosshairs hidden md:block"></div>
+            <div class="instrument-crosshairs-bottom hidden md:block"></div>
+
+            <div class="relative z-10 flex flex-col h-full p-4 md:p-8 overflow-hidden">
+                <div class="flex items-center gap-4 mb-2 shrink-0 border-b border-tuvBlue/10 pb-4">
+                    <button onclick="goBackFromResult()"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded bg-tuvBlue/5 border border-tuvBlue/20 text-tuvBlue font-mono text-[11px] tracking-widest uppercase hover:bg-tuvBlue hover:text-white transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="m12 19-7-7 7-7" />
+                            <path d="M19 12H5" />
+                        </svg>
+                        Previous Question
+                    </button>
+                    <span
+                        class="ml-auto font-mono text-[11px] text-tuvBlue font-bold bg-tuvBlue/5 px-3 py-1.5 rounded border border-tuvBlue/20 tracking-widest">
+                        [ RESULT ]
+                    </span>
+                </div>
+
+                <div
+                    class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pt-2 pb-4 flex flex-col px-1 after:content-[''] after:block after:h-8 after:shrink-0">
+
+                    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full shrink-0">
+                        <div id="result-visual-container"
+                            class="w-full lg:w-[48%] flex items-center justify-center min-h-[260px] lg:min-h-[340px] relative shrink-0">
+                        </div>
+
+                        <div class="w-full lg:w-[52%] flex flex-col justify-center h-full pt-2 md:pt-0">
+                            <div id="output-text"
+                                class="output-text font-sans text-charcoal text-[14px] md:text-[15px] leading-relaxed bg-[#F8F9FA]/80 p-5 md:p-8 rounded-[1rem] md:rounded-[1.5rem] border border-tuvBlue/10 shadow-sm relative overflow-hidden">
+                                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tuvBlue"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="r4-extra-content" class="w-full hidden mt-6 shrink-0"></div>
+
+                    <div class="shrink-0 flex items-center justify-between mt-8 w-full px-2 md:px-8">
+                        <button onclick="copyResult()"
+                            class="bg-tuvBlue text-white px-5 py-3 font-mono uppercase tracking-widest text-[11px] font-bold rounded hover:bg-tuvBlueLight hover:-translate-y-0.5 transition-all shadow-[0_4px_10px_rgba(0,113,185,0.2)] flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                            </svg>
+                            Copy Result
+                        </button>
+                        <button onclick="resetEngine()"
+                            class="bg-transparent text-tuvBlue border border-tuvBlue/30 px-5 py-3 font-mono uppercase tracking-widest text-[11px] font-bold rounded hover:bg-tuvBlue/5 transition-all">
+                            Restart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="shrink-0 pt-4 mt-2 border-t border-tuvBlue/10 text-center">
+                    <p class="font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        The results of this questionnaire are for reference only and do not constitute any legal opinion
+                        or decision-making basis. TÜV Rheinland assumes no related legal liability. Final conclusions
+                        shall be subject to a comprehensive professional expert assessment.
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        &copy; 2026 TÜV Rheinland. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. Data source definitions
+        // ==========================================
+        const TRIAGE_NODES = {
+            'filter1': {
+                step: 1,
+                q: 'Is your AI product/service intended to be sold, distributed, or deployed in an EU Member State, or will its generated output be used by users located in the EU?',
+                options: [
+                    { text: 'Yes, my product/service is intended for the EU market.', next: 'filter2' },
+                    { text: 'No, my product/service is intended for other regions.', output: 'R1' }
+                ]
+            },
+            'filter2': {
+                step: 2,
+                q: 'Does your AI system involve any of the following intended purposes or use scenarios?',
+                options: [
+                    { text: '1. <strong>Subliminal manipulation</strong>: Using audio or visual stimuli beyond human awareness to influence user behavior.', output: 'R2' },
+                    { text: '2. <strong>Exploitation of vulnerabilities of specific groups</strong>: Targeting children, persons with disabilities, or other vulnerable groups to induce behavior (e.g. encouraging irrational consumption by minors).', output: 'R2' },
+                    { text: '3. <strong>Social scoring</strong>: Similar to a “social credit system,” scoring individuals based on behavior and using that score to determine differential treatment.', output: 'R2' },
+                    { text: '4. <strong>Crime prediction</strong>: Predicting the likelihood of criminal behavior solely based on biometric characteristics rather than specific criminal facts.', output: 'R2' },
+                    { text: '5. <strong>Untargeted scraping of facial images</strong>: Mass collection of facial images from the internet or CCTV footage to build databases.', output: 'R2' },
+                    { text: '6. <strong>Inference of sensitive attributes from biometrics</strong>: Using facial scans or fingerprints to infer race, political opinions, sexual orientation, or religious beliefs.', output: 'R2' },
+                    { text: '7. <strong>Emotion recognition in the workplace or educational institutions</strong>: For example, monitoring whether employees or students are “happy” or “tired” (excluding driver fatigue monitoring).', output: 'R2' },
+                    { text: '8. <strong>Real-time remote biometric identification</strong>: For example, real-time facial recognition in public spaces such as streets or squares.', output: 'R2' },
+                    { text: 'No, my product/service does not involve any of the above intended purposes or use scenarios.', next: 'filter3' }
+                ]
+            },
+            'filter3': {
+                step: 3,
+                q: 'What form does your AI product/service take?',
+                options: [
+                    { text: 'A. An AI system: a complete, directly usable product or application (e.g. AI photo album in a smartphone, autonomous vehicle, SaaS chatbot platform, etc.).', next: 'q1' },
+                    { text: 'B. An AI model/API/algorithm package that is not directly facing end users (e.g. an open-source LLM).', output: 'R3' }
+                ]
+            },
+            'q1': {
+                step: 4,
+                q: 'Is your AI system used as a safety component of a product that is itself already regulated under existing EU legislation?\n\n<span class="text-sm text-charcoal/60">Definition of safety component: a component of a product or AI system that fulfills a safety function; failure or malfunction of this component may endanger human health and safety, or property safety.\n\nExamples: water pressure monitoring or fire alarm systems in cloud data centers, obstacle-avoidance algorithms in autonomous vehicles, emergency braking AI systems in elevators, etc.</span>',
+                options: [
+                    { text: 'Yes, my AI system is a safety component, and the product itself is already regulated under existing EU legislation.', output: 'R4' },
+                    { text: 'No, my AI system is not a safety component.', next: 'q2' }
+                ]
+            },
+            'q2': {
+                step: 5,
+                q: 'Will your AI system be used in any of the following scenarios?',
+                options: [
+                    { text: '<strong>Biometric identification / categorization</strong>: 1) post remote biometric identification; 2) categorization based on sensitive or protected biometric data (such as age, ethnicity, race, sex, or disability); 3) <strong>emotion recognition outside workplace/education contexts</strong> (e.g. wearables detecting emotional fluctuations).', output: 'R4' },
+                    { text: '<strong>Critical infrastructure</strong>: Digital components managing water, electricity, gas, transportation, or similar infrastructure (e.g. AI-controlled traffic lights).', output: 'R4' },
+                    { text: '<strong>Education / vocational training</strong>: Deciding admission, assigning students to classes, or evaluating exam performance.', output: 'R4' },
+                    { text: '<strong>Employment / worker management</strong>: Screening CVs, evaluating interview performance, assigning tasks, or monitoring employee performance.', output: 'R4' },
+                    { text: '<strong>Access to essential services / public benefits</strong>: Assessing eligibility for social welfare, healthcare, or performing credit scoring.', output: 'R4' },
+                    { text: '<strong>Law enforcement / justice / migration</strong>: Assisting police with evidence assessment, lie detection, or reviewing visa/asylum applications.', output: 'R4' },
+                    { text: 'No, my AI system will not be used in any of the above scenarios.', next: 'q3' }
+                ]
+            },
+            'q3': {
+                step: 6,
+                q: 'Does your system involve any of the following functions?',
+                options: [
+                    { text: '<strong>Human-AI interaction</strong>: Chatbots, intelligent customer service, virtual companions.', output: 'R5' },
+                    { text: '<strong>Synthetic content (AIGC)</strong>: Generating images, video, audio (deepfakes), news articles, or creative text.', output: 'R5' },
+                    { text: '<strong>Biometric categorization / emotion recognition</strong>: For example, distinguishing different speakers in a meeting based on voiceprints.', output: 'R5' },
+                    { text: 'No, my system does not include these functions.', output: 'R6' }
+                ]
+            }
+        };
+
+        const OUTPUTS = {
+            'R1': 'This Act applies only to AI products/services entering the EU market, so your current scenario is not directly covered.\nIt is still recommended to use it as a global compliance benchmark to lay the foundation for future market access.',
+            'R2': 'Your product/service may involve prohibited AI practices as defined under the EU AI Act. Such services/products are strictly prohibited in the EU. Please immediately revise the product/service definition.',
+            'R3': 'Your product/service is highly likely to be classified as a General-Purpose AI Model, which may be placed on the market, but must fulfill obligations under the EU AI Act, including technical documentation and copyright/data compliance. If your model is considered to present systemic risk, additional obligations may apply, such as model evaluation and serious incident reporting.\nFor detailed compliance requirements for general-purpose AI systems, please contact TÜV Rheinland.',
+            'R4': 'Your AI system is highly likely to be classified as a High-Risk AI System, which may be placed on the market, but must fulfill multiple compliance obligations under the EU AI Act, including quality management, risk management, data governance, human oversight, cybersecurity, and more.\n\nTÜV Rheinland provides strategic compliance solutions across the entire product lifecycle, helping enterprises accurately assess AI risk levels, identify potential risks in advance, and formulate and implement practical compliance plans to ensure smooth market entry into the EU in a forward-looking and actionable manner.',
+            'R5': 'Your AI system is highly likely to be classified as a Limited-Risk AI System and must comply with transparency obligations, such as clearly indicating that content is AI-generated, that users are interacting with AI, and applying digital watermarking where appropriate.\nFor details on transparency obligation statements, please contact TÜV Rheinland.',
+            'R6': 'Congratulations! Your AI system is highly likely to be classified as a Minimal-Risk AI System and will face relatively limited regulatory restrictions. You may still consider voluntarily adopting transparency statements to demonstrate corporate compliance responsibility.'
+        };
+
+        // ==========================================
+        // 2. State machine and core logic
+        // ==========================================
+        let historyStack = [];
+        let currentOutput = null;
+
+        const greetingView = document.getElementById('greeting-view');
+        const consoleContainer = document.getElementById('console-container');
+        const optionsContainer = document.getElementById('options-container');
+        const resultView = document.getElementById('result-view');
+        const btnBack = document.getElementById('btn-back');
+        const progressBar = document.getElementById('progress-bar');
+        const questionText = document.getElementById('question-text');
+        const outputText = document.getElementById('output-text');
+        const resultVisualContainer = document.getElementById('result-visual-container');
+        const r4ExtraContainer = document.getElementById('r4-extra-content');
+
+        function formatItalicEmphasis(text) {
+            const patterns = [
+                /General-Purpose AI Model(s)?/gi,
+                /High-Risk AI System(s)?/gi,
+                /Limited-Risk AI System(s)?/gi,
+                /Minimal-Risk AI System(s)?/gi,
+                /Prohibited AI Practice(s)?/gi,
+                /prohibited AI practice(s)?/gi,
+                /general-purpose AI model(s)?/gi,
+                /high-risk AI system(s)?/gi,
+                /limited-risk AI system(s)?/gi,
+                /minimal-risk AI system(s)?/gi,
+                /safety component(s)?/gi,
+                /systemic risk/gi,
+                /technical documentation/gi,
+                /transparency obligations?/gi,
+                /human oversight/gi,
+                /cybersecurity/gi,
+                /quality management/gi,
+                /risk management/gi,
+                /data governance/gi
+            ];
+
+            let formatted = text;
+
+            patterns.forEach((pattern) => {
+                formatted = formatted.replace(pattern, (match) => {
+                    return `<span class="risk-italic">${match}</span>`;
+                });
+            });
+
+            return formatted.replace(/\n/g, '<br>');
+        }
+
+        function renderCurrentState() {
+            if (historyStack.length === 0 && !currentOutput) {
+                greetingView.style.display = 'flex';
+                consoleContainer.style.display = 'none';
+                resultView.style.display = 'none';
+                gsap.fromTo(
+                    greetingView,
+                    { opacity: 0, scale: 0.98 },
+                    { opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out' }
+                );
+            } else if (currentOutput) {
+                renderOutput();
+            } else {
+                renderNode();
+            }
+        }
+
+        function startDiagnostic() {
+            gsap.to(greetingView, {
+                opacity: 0,
+                scale: 0.98,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => {
+                    historyStack = ['filter1'];
+                    greetingView.style.display = 'none';
+                    greetingView.style.opacity = 1;
+                    greetingView.style.transform = 'scale(1)';
+                    renderCurrentState();
+                }
+            });
+        }
+
+        function renderNode() {
+            const nodeId = historyStack[historyStack.length - 1];
+            const node = TRIAGE_NODES[nodeId];
+
+            btnBack.disabled = historyStack.length === 1;
+            progressBar.style.width = `${(node.step / 6) * 100}%`;
+            questionText.innerHTML = node.q.replace(/\n/g, '<br>');
+
+            Array.from(optionsContainer.children).forEach(child => {
+                if (child.id !== 'question-view') child.remove();
+            });
+
+            optionsContainer.scrollTop = 0;
+
+            node.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'spotlight-card px-4 md:px-5 py-3 md:py-4 cursor-pointer focus:outline-none text-left flex items-center group shrink-0 transition-all';
+                btn.innerHTML = `
+                    <span class="bracket left hidden md:inline-block">[</span>
+                    <span class="font-sans text-[13px] md:text-[15px] text-charcoal leading-snug z-10 w-full pr-6">${opt.text}</span>
+                    <div class="absolute right-3 md:right-4 w-5 h-5 shrink-0 border border-tuvBlue/30 flex items-center justify-center text-tuvBlue opacity-0 group-[.active-selected]:opacity-100 md:group-hover:opacity-100 transition-opacity z-10 bg-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                    <span class="bracket right hidden md:inline-block">]</span>
+                `;
+                btn.onclick = () => {
+                    Array.from(optionsContainer.children).forEach(child => child.classList.remove('active-selected'));
+                    btn.classList.add('active-selected');
+                    proceedToNext(opt);
+                };
+                optionsContainer.appendChild(btn);
+            });
+
+            greetingView.style.display = 'none';
+            resultView.style.display = 'none';
+            consoleContainer.style.display = 'flex';
+
+            gsap.fromTo(
+                optionsContainer.children,
+                { opacity: 0, x: -10 },
+                { opacity: 1, x: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' }
+            );
+        }
+
+        function proceedToNext(opt) {
+            gsap.to(consoleContainer, {
+                opacity: 0,
+                scale: 0.98,
+                duration: 0.2,
+                ease: 'power2.in',
+                onComplete: () => {
+                    if (opt.output) currentOutput = opt.output;
+                    else if (opt.next) historyStack.push(opt.next);
+                    consoleContainer.style.opacity = 1;
+                    consoleContainer.style.transform = 'scale(1)';
+                    renderCurrentState();
+                }
+            });
+        }
+
+        function renderOutput() {
+            consoleContainer.style.display = 'none';
+            resultView.style.display = 'flex';
+
+            let visualHTML = '';
+
+            if (['R2', 'R4', 'R5', 'R6'].includes(currentOutput)) {
+                const TIERS = [
+                    { name: 'Prohibited AI Practice', colorLeft: '#B33B18', colorRight: '#DA4B21', activeOut: 'R2' },
+                    { name: 'High-Risk AI System', colorLeft: '#BE6300', colorRight: '#E57800', activeOut: 'R4' },
+                    { name: 'Limited-Risk AI System', colorLeft: '#DBA10A', colorRight: '#F9BB10', activeOut: 'R5' },
+                    { name: 'Minimal-Risk AI System', colorLeft: '#008896', colorRight: '#008896', activeOut: 'R6' }
+                ];
+
+                let t = 0;
+                let svgContent = '';
+
+                TIERS.forEach((tier) => {
+                    const isActive = (tier.activeOut === currentOutput);
+                    const size = isActive ? 0.55 : 0.15;
+                    const t1 = t;
+                    const t2 = t + size;
+                    t = t2;
+
+                    const X_CENTER = 130;
+                    const DX = 100;
+                    const DY_MID = 240;
+                    const DY_EDGE = 180;
+                    const Y_BASE = 45;
+
+                    const pt1 = `${X_CENTER},${Y_BASE + DY_MID * t1}`;
+                    const pl2 = `${X_CENTER - DX * t1},${Y_BASE + DY_EDGE * t1}`;
+                    const pl3 = `${X_CENTER - DX * t2},${Y_BASE + DY_EDGE * t2}`;
+                    const pt4 = `${X_CENTER},${Y_BASE + DY_MID * t2}`;
+
+                    const pr2 = `${X_CENTER + DX * t1},${Y_BASE + DY_EDGE * t1}`;
+                    const pr3 = `${X_CENTER + DX * t2},${Y_BASE + DY_EDGE * t2}`;
+
+                    const faceLeft = `<polygon points="${pt1} ${pl2} ${pl3} ${pt4}" fill="${tier.colorLeft}" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" stroke-linejoin="round" />`;
+                    const faceRight = `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="${tier.colorRight}" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" stroke-linejoin="round" />`;
+
+                    const avgX = X_CENTER + (DX * t1 + DX * t2) / 4;
+                    const avgY = Y_BASE + (DY_MID * t1 + DY_EDGE * t1 + DY_EDGE * t2 + DY_MID * t2) / 4;
+
+                    const jointX = avgX + 25;
+                    const jointY = avgY - 10;
+                    const endX = 265;
+
+                    const callout = `
+                        <polyline points="${avgX},${avgY} ${jointX},${jointY} ${endX},${jointY}" fill="none" stroke="${isActive ? tier.colorRight : 'rgba(134,134,139,0.3)'}" stroke-width="${isActive ? 2 : 1.5}" />
+                        <circle cx="${avgX}" cy="${avgY}" r="${isActive ? 3.5 : 2}" fill="${isActive ? '#fff' : tier.colorRight}" stroke="${tier.colorRight}" stroke-width="${isActive ? 2 : 0}" />
+                        <circle cx="${endX}" cy="${jointY}" r="1.5" fill="${isActive ? tier.colorRight : 'rgba(134,134,139,0.5)'}" />
+                        <text x="${endX + 10}" y="${jointY + 1}" fill="${isActive ? tier.colorRight : '#86868b'}" font-size="${isActive ? '15' : '11.5'}" font-weight="${isActive ? '700' : '500'}" dominant-baseline="central" font-family="'Plus Jakarta Sans', sans-serif" letter-spacing="1">
+                            ${tier.name}
+                        </text>
+                    `;
+
+                    svgContent += `
+                        <g class="tier-layer" opacity="0">
+                            ${faceLeft}
+                            ${faceRight}
+                            ${isActive ? `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="white" opacity="0.1" />` : ''}
+                            ${callout}
+                        </g>
+                    `;
+                });
+
+                visualHTML = `
+                    <div class="relative w-full h-full flex items-center justify-center p-4">
+                        <svg viewBox="0 0 450 320" class="w-full max-w-full h-auto drop-shadow-xl overflow-visible z-10">
+                            ${svgContent}
+                        </svg>
+                    </div>
+                `;
+            } else if (currentOutput === 'R1') {
+                visualHTML = `
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
+                        <svg class="absolute inset-0 w-full h-full animate-[spin_20s_linear_infinite] opacity-30" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2 4"/>
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.5" stroke-dasharray="5 5"/>
+                            <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                            <line x1="50" y1="2" x2="50" y2="98" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+                            <line x1="2" y1="50" x2="98" y2="50" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+                        </svg>
+                        <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10 drop-shadow-[0_0_15px_rgba(0,113,185,0.4)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        <div class="absolute w-3 h-3 bg-techCyan rounded-full top-[30%] left-[25%] animate-ping opacity-60"></div>
+                    </div>
+                `;
+            } else if (currentOutput === 'R3') {
+                visualHTML = `
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
+                        <div class="absolute inset-0 bg-techCyan/10 blur-2xl rounded-full"></div>
+                        <svg class="absolute w-full h-full animate-[spin_25s_linear_infinite]" viewBox="0 0 100 100">
+                            <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="currentColor" stroke-width="0.3" transform="rotate(30 50 50)" class="opacity-40" stroke-dasharray="4 4"/>
+                            <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="currentColor" stroke-width="0.3" transform="rotate(-30 50 50)" class="opacity-50" stroke-dasharray="2 6"/>
+                            <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="currentColor" stroke-width="0.2" transform="rotate(90 50 50)" class="opacity-30"/>
+                        </svg>
+
+                        <div class="relative z-10 w-20 h-20 md:w-24 md:h-24 text-tuvBlue">
+                            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" class="drop-shadow-[0_0_15px_rgba(0,194,255,0.3)]">
+                                <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" fill="rgba(0,194,255,0.05)" stroke="#00C2FF" stroke-width="1"/>
+                                <polyline points="50,10 50,50 85,30" stroke="#00C2FF" opacity="0.6"/>
+                                <polyline points="50,50 85,70" stroke="#00C2FF" opacity="0.6"/>
+                                <polyline points="50,50 50,90" stroke="#00C2FF" opacity="0.6"/>
+                                <polyline points="50,50 15,70" stroke="#00C2FF" opacity="0.6"/>
+                                <polyline points="50,50 15,30" stroke="#00C2FF" opacity="0.6"/>
+                                <circle cx="50" cy="50" r="6" fill="#fff" class="animate-pulse" filter="drop-shadow(0 0 8px #00C2FF)"/>
+                                <circle cx="50" cy="10" r="2" fill="#00C2FF"/>
+                                <circle cx="85" cy="30" r="2" fill="#00C2FF"/>
+                                <circle cx="85" cy="70" r="2" fill="#00C2FF"/>
+                                <circle cx="50" cy="90" r="2" fill="#00C2FF"/>
+                                <circle cx="15" cy="70" r="2" fill="#00C2FF"/>
+                                <circle cx="15" cy="30" r="2" fill="#00C2FF"/>
+                            </svg>
+                        </div>
+
+                        <div class="absolute w-2 h-2 bg-techCyan rounded-full top-1/4 left-[15%] animate-ping opacity-60"></div>
+                        <div class="absolute w-1.5 h-1.5 bg-tuvBlue rounded-full bottom-1/3 right-[15%] animate-ping opacity-80" style="animation-delay: 1s;"></div>
+                    </div>
+                `;
+            }
+
+            resultVisualContainer.innerHTML = visualHTML;
+            outputText.innerHTML = formatItalicEmphasis(OUTPUTS[currentOutput]);
+
+            r4ExtraContainer.innerHTML = `
+                <div class="w-full bg-white/70 border border-tuvBlue/15 rounded-[1.5rem] shadow-sm relative overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="absolute -right-8 -top-8 w-40 h-40 bg-tuvBlue/5 rounded-full blur-2xl pointer-events-none"></div>
+
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h4 class="text-tuvBlue font-bold text-[14px] md:text-base mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            TÜV Rheinland Electrical & Electronic Product Services
+                        </h4>
+                        <p class="text-[12px] md:text-[13px] text-charcoal/70 leading-relaxed text-justify">
+                            Backed by globally recognized qualification systems, we provide end-to-end testing and certification solutions across multiple industries, including displays, communications, and smart devices, covering safety compliance, energy efficiency, EMC, RF, cybersecurity, and AI-related services.
+                        </p>
+                    </div>
+
+                    <div class="hidden md:block w-px bg-tuvBlue/10 self-stretch"></div>
+                    <div class="md:hidden h-px w-full bg-tuvBlue/10"></div>
+
+                    <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center shrink-0 w-full sm:w-auto">
+                        <div class="space-y-3">
+                            <div class="text-[10px] uppercase font-mono tracking-widest text-muted font-bold">Contact Us</div>
+                            <div class="flex items-center gap-3 text-[12px] text-charcoal">
+                                <div class="w-7 h-7 rounded-full bg-tuvBlue/10 flex items-center justify-center text-tuvBlue shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-mono font-medium text-[13px]">+86 755 8268 1288</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-[12px] text-charcoal">
+                                <div class="w-7 h-7 rounded-full bg-tuvBlue/10 flex items-center justify-center text-tuvBlue shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                    </svg>
+                                </div>
+                                <span class="font-mono font-medium text-[13px]">Evelyn.Tang@tuv.com</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 shrink-0 w-full sm:w-auto justify-center sm:justify-start self-center sm:self-auto">
+                            <div class="flex flex-col items-center gap-1.5">
+                                <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
+                                    <img src="./qrcode.jpg" alt="Official Account QR Code" class="w-full h-full object-cover rounded-sm">
+                                </div>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">Follow Us</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1.5">
+                                <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
+                                    <img src="./Registration.jpg" alt="Contact QR Code" class="w-full h-full object-cover rounded-sm">
+                                </div>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">Contact Us</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            r4ExtraContainer.classList.remove('hidden');
+            r4ExtraContainer.classList.add('block');
+
+            const resultScrollArea = resultView.querySelector('.overflow-y-auto');
+            if (resultScrollArea) {
+                resultScrollArea.scrollTop = 0;
+            }
+
+            gsap.fromTo(
+                resultView,
+                { opacity: 0, scale: 0.98 },
+                { opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out' }
+            );
+
+            const tierLayers = document.querySelectorAll('.tier-layer');
+            if (tierLayers.length > 0) {
+                gsap.fromTo(
+                    tierLayers,
+                    { opacity: 0, y: 15 },
+                    { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'back.out(1.2)', delay: 0.2 }
+                );
+            }
+        }
+
+        function goBack() {
+            if (historyStack.length > 1) {
+                gsap.to(consoleContainer, {
+                    opacity: 0,
+                    x: 20,
+                    duration: 0.2,
+                    ease: 'power2.in',
+                    onComplete: () => {
+                        historyStack.pop();
+                        currentOutput = null;
+                        consoleContainer.style.opacity = 1;
+                        consoleContainer.style.transform = 'translateX(0)';
+                        renderCurrentState();
+                    }
+                });
+            }
+        }
+
+        function goBackFromResult() {
+            gsap.to(resultView, {
+                opacity: 0,
+                scale: 0.98,
+                duration: 0.2,
+                ease: 'power2.in',
+                onComplete: () => {
+                    currentOutput = null;
+                    resultView.style.opacity = 1;
+                    resultView.style.transform = 'scale(1)';
+                    renderCurrentState();
+                }
+            });
+        }
+
+        function resetEngine() {
+            gsap.to([consoleContainer, resultView], {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                    historyStack = [];
+                    currentOutput = null;
+                    consoleContainer.style.opacity = 1;
+                    resultView.style.opacity = 1;
+                    renderCurrentState();
+                }
+            });
+        }
+
+        function copyResult() {
+            navigator.clipboard.writeText(OUTPUTS[currentOutput]).then(() => {
+                alert('Result copied.');
+            });
+        }
+
+        // Initialize
+        renderCurrentState();
+    </script>
+</body>
+
+</html>
