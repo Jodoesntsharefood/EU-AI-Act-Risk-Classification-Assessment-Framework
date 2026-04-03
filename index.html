@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EU AI Act Risk Classification Assessment Framework | TÜV Rheinland</title>
+    <title>EU AI Act 风险分级评估框架 | TÜV Rheinland</title>
 
-    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
         rel="stylesheet">
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,11 +39,9 @@
         }
     </script>
 
-    <!-- GSAP 3 Animation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
-        /* ================= Basic Configuration & Global Background ================= */
         body,
         html {
             background-color: var(--appleBg);
@@ -90,7 +86,6 @@
             background: transparent;
         }
 
-        /* ================= Panels & Decorations ================= */
         .instrument-panel {
             position: relative;
         }
@@ -218,59 +213,73 @@
         }
 
         .risk-italic {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-weight: 600;
+            font-family: 'Inter', '-apple-system', sans-serif;
+            font-style: normal;
+            font-weight: 700;
             color: #0071B9;
-            font-size: 1.15em;
+            background: rgba(0, 113, 185, 0.08);
+            padding: 0 4px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         .output-text {
             white-space: pre-wrap;
             line-height: 1.8;
         }
+
+        .lang-switch button.active {
+            background: #0071B9;
+            color: white;
+            border-color: #0071B9;
+        }
     </style>
 </head>
 
 <body class="flex flex-col">
 
-    <!-- Background Layer -->
     <div class="tech-grid"></div>
     <div class="hero-mesh-bg"></div>
 
-    <!-- Top Status Bar -->
     <header
         class="relative z-20 h-16 w-full flex items-center justify-between px-6 border-b border-tuvBlue/10 bg-white/40 backdrop-blur-md">
-        <div class="flex items-center gap-4">
-            <div class="relative w-4 h-4 flex items-center justify-center">
+        <div class="flex items-center gap-4 min-w-0">
+            <div class="relative w-4 h-4 flex items-center justify-center shrink-0">
                 <div class="absolute inset-0 border border-tuvBlue rounded-sm animate-[spin_4s_linear_infinite]"></div>
                 <div class="w-1.5 h-1.5 bg-tuvBlue rounded-[1px]"></div>
             </div>
-            <div
-                class="font-display font-bold tracking-tight text-[13px] sm:text-base md:text-lg text-charcoal whitespace-nowrap overflow-hidden text-ellipsis max-w-[58vw] sm:max-w-none">
-                EU AI Act Assessment Framework
+            <div id="header-title"
+                class="font-display font-bold tracking-tight text-[13px] sm:text-base md:text-lg text-charcoal whitespace-nowrap overflow-hidden text-ellipsis max-w-[40vw] sm:max-w-none">
+                EU AI Act 风险分级评估框架
             </div>
-            <div
+            <div id="header-subtitle"
                 class="hidden md:flex ml-4 pl-4 border-l border-tuvBlue/20 font-mono text-[10px] text-tuvBlue/80 flex-col leading-tight">
                 <span>EU AI Act</span>
                 <span>Risk Classification Assessment Framework</span>
             </div>
         </div>
-        <button onclick="resetEngine()"
-            class="flex items-center gap-2 px-4 py-1.5 rounded bg-tuvBlue/5 font-mono text-[11px] tracking-widest uppercase border border-tuvBlue/20 text-tuvBlue hover:bg-tuvBlue hover:text-white transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-            </svg>
-            Restart
-        </button>
+
+        <div class="flex items-center gap-2 shrink-0">
+            <div class="lang-switch flex items-center rounded border border-tuvBlue/20 overflow-hidden bg-white/60">
+                <button id="lang-zh" onclick="setLanguage('zh')"
+                    class="px-3 py-1.5 text-[11px] font-mono tracking-widest text-tuvBlue border-r border-tuvBlue/20 active">中文</button>
+                <button id="lang-en" onclick="setLanguage('en')"
+                    class="px-3 py-1.5 text-[11px] font-mono tracking-widest text-tuvBlue">EN</button>
+            </div>
+            <button id="header-reset" onclick="resetEngine()"
+                class="flex items-center gap-2 px-4 py-1.5 rounded bg-tuvBlue/5 font-mono text-[11px] tracking-widest uppercase border border-tuvBlue/20 text-tuvBlue hover:bg-tuvBlue hover:text-white transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                </svg>
+                <span id="header-reset-text">重新测试</span>
+            </button>
+        </div>
     </header>
 
-    <!-- Main Interactive Area -->
     <main class="relative z-10 flex-1 flex items-center justify-center p-4 md:p-8 overflow-hidden">
 
-        <!-- 1. Welcome Console Panel -->
         <div id="greeting-view"
             class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/80 backdrop-blur-3xl border border-white rounded-[1.5rem] md:rounded-[2rem] shadow-tech flex flex-col transition-all duration-300">
             <div class="instrument-crosshairs"></div>
@@ -286,42 +295,40 @@
                             <path d="m9 12 2 2 4-4"></path>
                         </svg>
                     </div>
-                    <h1
+                    <h1 id="welcome-title"
                         class="font-display text-[18px] sm:text-[22px] md:text-5xl text-charcoal font-bold tracking-tight mb-4 md:mb-6 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
-                        EU AI Act Risk Classification Framework</h1>
-                    <p
+                        EU AI Act 风险分级评估框架
+                    </h1>
+                    <p id="welcome-desc"
                         class="font-sans text-[14px] md:text-base text-charcoal/70 leading-relaxed max-w-2xl mb-6 md:mb-8 px-2 text-center">
-                        Welcome to the AI Risk Classification Assessment Framework. This framework will help you
-                        preliminarily understand the compliance risk level of your AI products/services under the EU
-                        Artificial Intelligence Act through a series of pre-screening questions.
+                        欢迎使用AI风险分级评估框架。本框架将通过一系列预审问题，帮助您初步了解 AI 产品/服务在《欧盟人工智能法案》下的合规风险等级。
                     </p>
                     <button onclick="startDiagnostic()"
                         class="group relative px-8 py-4 bg-tuvBlue text-white font-mono font-bold tracking-widest text-sm uppercase rounded shadow-[0_4px_15px_rgba(0,113,185,0.3)] hover:bg-tuvBlueLight hover:-translate-y-1 transition-all overflow-hidden">
                         <div
                             class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         </div>
-                        <div class="relative z-10 flex items-center gap-3">Start Assessment <svg
-                                class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                        <div class="relative z-10 flex items-center gap-3">
+                            <span id="start-btn-text">开始测试</span>
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"></path>
                                 <path d="m12 5 7 7-7 7"></path>
-                            </svg></div>
+                            </svg>
+                        </div>
                     </button>
                 </div>
-                <!-- Disclaimer -->
                 <div class="shrink-0 mt-8 text-center">
-                    <p class="font-mono text-[10px] text-charcoal/40 tracking-wide">
-                        The results of this questionnaire are for reference only and do not constitute legal advice. TÜV
-                        Rheinland assumes no legal liability. Final conclusions must be based on comprehensive
-                        assessments by professional experts.</p>
-                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland. All
-                        rights reserved.</p>
+                    <p id="disclaimer-top" class="font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland.
+                        <span id="rights-text-top">All rights reserved.</span></p>
                 </div>
             </div>
         </div>
 
-        <!-- 2. Question Console Panel -->
         <div id="console-container"
             class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/80 backdrop-blur-3xl border border-white rounded-[1.5rem] md:rounded-[2rem] shadow-tech hidden flex flex-col transition-all duration-300">
             <div class="instrument-crosshairs hidden md:block"></div>
@@ -336,7 +343,8 @@
                                 fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="m12 19-7-7 7-7" />
                                 <path d="M19 12H5" />
-                            </svg> Go Back
+                            </svg>
+                            <span id="back-btn-text">返回上一题</span>
                         </button>
                     </div>
                     <div class="w-full md:w-1/3 h-1.5 bg-tuvBlue/10 rounded-full overflow-hidden">
@@ -356,14 +364,12 @@
             </div>
         </div>
 
-        <!-- 3. Result View -->
         <div id="result-view"
             class="instrument-panel w-full max-w-5xl h-full max-h-[85dvh] md:max-h-[90dvh] bg-white/90 backdrop-blur-3xl rounded-[1.5rem] md:rounded-[2rem] border border-tuvBlue/10 shadow-tech hidden flex-col">
             <div class="instrument-crosshairs hidden md:block"></div>
             <div class="instrument-crosshairs-bottom hidden md:block"></div>
 
             <div class="relative z-10 flex flex-col h-full p-4 md:p-8 overflow-hidden">
-                <!-- Top Control Bar -->
                 <div class="flex items-center gap-4 mb-2 shrink-0 border-b border-tuvBlue/10 pb-4">
                     <button onclick="goBackFromResult()"
                         class="flex items-center gap-2 px-3 py-1.5 rounded bg-tuvBlue/5 border border-tuvBlue/20 text-tuvBlue font-mono text-[11px] tracking-widest uppercase hover:bg-tuvBlue hover:text-white transition-all duration-300">
@@ -371,39 +377,32 @@
                             stroke="currentColor" stroke-width="2">
                             <path d="m12 19-7-7 7-7" />
                             <path d="M19 12H5" />
-                        </svg> Go Back
+                        </svg>
+                        <span id="result-back-btn-text">返回上一题</span>
                     </button>
-                    <span
+                    <span id="result-badge"
                         class="ml-auto font-mono text-[11px] text-tuvBlue font-bold bg-tuvBlue/5 px-3 py-1.5 rounded border border-tuvBlue/20 tracking-widest">[
-                        Assessment Result ]</span>
+                        测试结果 ]</span>
                 </div>
 
-                <!-- Scrollable Main Content -->
                 <div
                     class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pt-2 pb-4 flex flex-col px-1 after:content-[''] after:block after:h-8 after:shrink-0">
 
-                    <!-- Top Half: Visual and Text -->
                     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full shrink-0">
-                        <!-- Left: Visual Model -->
                         <div id="result-visual-container"
                             class="w-full lg:w-[48%] flex items-center justify-center min-h-[260px] lg:min-h-[340px] relative shrink-0">
-                            <!-- SVG injected here -->
                         </div>
 
-                        <!-- Right: Text Analysis -->
                         <div class="w-full lg:w-[52%] flex flex-col justify-center h-full pt-2 md:pt-0">
                             <div id="output-text"
                                 class="output-text font-sans text-charcoal text-[14px] md:text-[15px] leading-relaxed bg-[#F8F9FA]/80 p-5 md:p-8 rounded-[1rem] md:rounded-[1.5rem] border border-tuvBlue/10 shadow-sm relative overflow-hidden">
-                                <!-- Decorative left border -->
                                 <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tuvBlue"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bottom Half: Contact Card (Injected dynamically) -->
                     <div id="r4-extra-content" class="w-full hidden mt-6 shrink-0"></div>
 
-                    <!-- Bottom Action Buttons -->
                     <div class="shrink-0 flex items-center justify-between mt-8 w-full px-2 md:px-8">
                         <button onclick="copyResult()"
                             class="bg-tuvBlue text-white px-5 py-3 font-mono uppercase tracking-widest text-[11px] font-bold rounded hover:bg-tuvBlueLight hover:-translate-y-0.5 transition-all shadow-[0_4px_10px_rgba(0,113,185,0.2)] flex items-center gap-2">
@@ -412,110 +411,239 @@
                                 <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
                                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
                             </svg>
-                            Copy Result
+                            <span id="copy-btn-text">拷贝结果</span>
                         </button>
                         <button onclick="resetEngine()"
                             class="bg-transparent text-tuvBlue border border-tuvBlue/30 px-5 py-3 font-mono uppercase tracking-widest text-[11px] font-bold rounded hover:bg-tuvBlue/5 transition-all">
-                            Restart Test
+                            <span id="restart-btn-text">重新测试</span>
                         </button>
                     </div>
 
                 </div>
 
-                <!-- Bottom Disclaimer -->
                 <div class="shrink-0 pt-4 mt-2 border-t border-tuvBlue/10 text-center">
-                    <p class="font-mono text-[10px] text-charcoal/40 tracking-wide">
-                        The results are for reference only and do not constitute legal advice. TÜV Rheinland assumes no
-                        legal liability. Final conclusions require comprehensive assessment by experts.</p>
-                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland. All
-                        rights reserved.</p>
+                    <p id="disclaimer-bottom" class="font-mono text-[10px] text-charcoal/40 tracking-wide">
+                        本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland.
+                        <span id="rights-text-bottom">All rights reserved.</span></p>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        // ==========================================
-        // 1. Data Source (Translated to English with EU AI Act Terminology)
-        // ==========================================
-        const TRIAGE_NODES = {
+        const I18N = {
+            zh: {
+                htmlLang: 'zh-CN',
+                pageTitle: 'EU AI Act 风险分级评估框架 | TÜV Rheinland',
+                headerTitle: 'EU AI Act 风险分级评估框架',
+                headerSubtitle1: 'EU AI Act',
+                headerSubtitle2: 'Risk Classification Assessment Framework',
+                headerReset: '重新测试',
+                welcomeTitle: 'EU AI Act 风险分级评估框架',
+                welcomeDesc: '欢迎使用AI风险分级评估框架。本框架将通过一系列预审问题，帮助您初步了解 AI 产品/服务在《欧盟人工智能法案》下的合规风险等级。',
+                startBtn: '开始测试',
+                disclaimer: '本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。',
+                rights: 'All rights reserved.',
+                backBtn: '返回上一题',
+                resultBadge: '[ 测试结果 ]',
+                copyBtn: '拷贝结果',
+                restartBtn: '重新测试',
+                copyAlert: '结果已拷贝。',
+                contactTitle: 'TÜV莱茵电子电气产品服务',
+                contactDesc: '依托全球权威资质体系，面向显示、通信与智能终端等多领域产品，提供涵盖安全合规、能效、EMC、RF、网络安全及AI相关服务在内的全链条检测认证解决方案。',
+                contactUs: '联系我们',
+                followUs: '关注我们',
+                contactUsShort: '联系我们',
+                qr1Alt: '服务号二维码',
+                qr2Alt: '问卷调查二维码',
+                tierNames: {
+                    R2: '禁止性AI实践',
+                    R4: '高风险人工智能系统',
+                    R5: '有限风险人工智能系统',
+                    R6: '最小风险人工智能系统'
+                },
+                outputs: {
+                    R1: '本法案仅对进入欧盟的AI产品/服务进行规范，暂不适用您的场景。\n建议您将其作为全球合规基准参考，为您未来进入全球市场奠定技术合规的基础。',
+                    R2: '您的产品/服务可能涉及《人工智能法案》中所定义的禁止性AI实践，此类服务/产品在欧盟被严格禁止，请立即修改产品/服务定义。',
+                    R3: '您的产品/服务很大可能属于通用AI模型，可以投放市场，但须按照欧盟《人工智能法案》的要求履行技术文档、数据版权合规等义务；若您的模型被认为具有系统性风险，还需履行模型评估、报告严重事件等额外义务。\n关于通用AI系统合规的细节要求，可联系TÜV莱茵咨询。',
+                    R4: '您的AI系统很大可能属于高风险人工智能系统，可以投放市场，但须按照欧盟《人工智能法案》的要求履行质量管理体系、风险管理体系、数据治理、人类监督、网络安全等多项合规义务。\n\nTÜV莱茵提供覆盖全产品生命周期的战略性合规解决方案，助力企业精准评估AI风险等级，提前识别潜在风险，并制定和实施切实可行的合规计划，以前瞻性和可操作性的方式，全面保障企业AI产品顺利进入欧盟市场的合规性。',
+                    R5: '您的AI系统很大可能属于有限风险人工智能系统，需要遵循透明度义务，例如，明确标识“由AI生成”、“正在与AI对话”，和添加数字水印。\n关于透明度义务声明的细节要求，可联系TÜV莱茵咨询。',
+                    R6: '恭喜您！您的AI系统很大可能属于最小风险人工智能系统，受到的监管限制较少，建议您可以自愿签署透明度义务声明/告知，展示企业的合规责任感。'
+                },
+                nodes: {
+                    filter1: {
+                        step: 1,
+                        q: '您的AI产品/服务是否计划在欧盟成员国进行销售、分发、部署，或其生成的输出结果会被欧盟境内的用户使用？',
+                        options: [
+                            { text: '是，我的产品/服务打算进入欧盟。', next: 'filter2' },
+                            { text: '否，我的产品/服务准备进入其他地区。', output: 'R1' }
+                        ]
+                    },
+                    filter2: {
+                        step: 2,
+                        q: '您的AI系统是否涉及任何一项设计意图/使用场景？',
+                        options: [
+                            { text: '1. <strong>潜意识影响</strong>： 使用人类无法察觉的声光刺激来改变用户行为', output: 'R2' },
+                            { text: '2. <strong>弱势群体特征利用</strong>：专门针对儿童、残障人士或特定社会群体的弱点进行诱导（如：诱导未成年人非理性消费）', output: 'R2' },
+                            { text: '3. <strong>社会信用评分</strong>： 类似于“社会信用体系”，根据个人行为对公民进行评分，并根据评分决定其区别待遇', output: 'R2' },
+                            { text: '4. <strong>犯罪预测</strong>： 仅凭个人的生物特征（而非具体犯罪事实）预测其犯罪概率', output: 'R2' },
+                            { text: '5. <strong>无差别面部特征抓取</strong>： 从互联网或监控录像中大规模爬取人脸照片来建立数据库', output: 'R2' },
+                            { text: '6. <strong>敏感生物特征推断</strong>： 通过扫描人脸或指纹，推断某人的种族、政治倾向、性取向或宗教信仰', output: 'R2' },
+                            { text: '7. <strong>工作/校园情绪识别</strong>： 例如在办公室或学校，用AI系统监控员工或学生是“开心”还是“疲劳”（注：驾驶员疲劳监测除外）', output: 'R2' },
+                            { text: '8. <strong>实时远程生物识别</strong>： 例如在公共场所（如广场、街道）进行实时“刷脸”找人', output: 'R2' },
+                            { text: '否，我的产品/服务都不涉及如上设计意图/使用场景', next: 'filter3' }
+                        ]
+                    },
+                    filter3: {
+                        step: 3,
+                        q: '您提供的AI产品/服务是什么形态？',
+                        options: [
+                            { text: 'A. 一个AI系统 ，是一个完整的、可直接使用的产品或应用（如：智能手机中的AI相册、自动驾驶汽车、SaaS聊天机器人平台等）', next: 'q1' },
+                            { text: 'B. 一个AI模型/API/算法包，本身不直接面向最终用户（如：开源的LLM）', output: 'R3' }
+                        ]
+                    },
+                    q1: {
+                        step: 4,
+                        q: '您的AI系统是否作为某产品的安全组件，且该产品本身受欧盟现有法规监管？\n\n<span class="text-sm text-charcoal/60">安全组件（safety component）定义：产品或人工智能系统中用于实现安全功能的组成部分；该组成部分一旦发生故障或失灵，可能危及人体健康与人身安全，或危及财产安全。\n\n示例： 云计算中心的水压检测系统或火灾报警系统、自动驾驶汽车的避障算法、电梯的紧急制动AI系统……</span>',
+                        options: [
+                            { text: '是，我的AI系统是一个安全组件，且产品本身已受欧盟现有法规的监管。', output: 'R4' },
+                            { text: '否，我的AI系统不是一个安全组件。', next: 'q2' }
+                        ]
+                    },
+                    q2: {
+                        step: 5,
+                        q: '您的AI系统是否将用于以下场景？',
+                        options: [
+                            { text: '<strong>生物特征识别</strong>： 1）非实时的远程生物识别；2）使用敏感或受保护的生物特征（如年龄、族裔、种族、性别或残疾），进行生物特征识别分类；3）<strong>用于非工作/教育场景的情绪/情感识别</strong>（如：穿戴设备识别情绪波动）', output: 'R4' },
+                            { text: '<strong>关键基建</strong>： 管理水、电、气、交通等基础设施的数字化组件（如：AI控制的交通信号灯）。', output: 'R4' },
+                            { text: '<strong>教育/职业培训</strong>：决定谁能入学、分配班级，或评估学生考试成绩等', output: 'R4' },
+                            { text: '<strong>招聘及用工</strong>：筛选简历、评估面试表现，或用于分配任务、监控员工绩效', output: 'R4' },
+                            { text: '<strong>公共服务/福利</strong>： 评估谁有资格获得低保、医保，或进行信用评分', output: 'R4' },
+                            { text: '<strong>执法/司法/移民</strong>： 协助警察评估证据、测谎，或用于签证/庇护申请的审核', output: 'R4' },
+                            { text: '否，我的AI系统不会运用在如上任意场景中', next: 'q3' }
+                        ]
+                    },
+                    q3: {
+                        step: 6,
+                        q: '您的系统是否涉及以下功能？',
+                        options: [
+                            { text: '<strong>人机交互</strong>： 聊天机器人（Chatbot）、智能客服、虚拟伴侣', output: 'R5' },
+                            { text: '<strong>合成内容（AIGC）</strong>： 生成图像、视频、音频（Deepfake），或生成新闻文章、创意文本', output: 'R5' },
+                            { text: '<strong>生物特征分类/情绪识别</strong>： 根据声纹分辨参会不同发言人', output: 'R5' },
+                            { text: '否，我的系统不包括这些功能', output: 'R6' }
+                        ]
+                    }
+                }
+            },
 
-            'filter1': {
-                step: 1,
-                q: 'Is your AI product/service planned to be sold, distributed, or deployed in EU member states, or will its generated outputs be used by users within the EU?',
-                options: [
-                    { text: 'Yes, my product/service is intended for the EU market.', next: 'filter2' },
-                    { text: 'No, my product/service is intended for other regions.', output: 'R1' }
-                ]
-            },
-            'filter2': {
-                step: 2,
-                q: 'Does your AI system involve any of the following design intents/use cases?',
-                options: [
-                    { text: '1. <strong>Subliminal Techniques</strong>: Using audio-visual stimuli beyond human consciousness to materially distort a person\'s behavior.', output: 'R2' },
-                    { text: '2. <strong>Exploitation of Vulnerabilities</strong>: Targeting vulnerabilities of specific groups (e.g., children, persons with disabilities) to distort behavior.', output: 'R2' },
-                    { text: '3. <strong>Social Scoring</strong>: Evaluating or classifying individuals based on social behavior or personal characteristics, leading to detrimental treatment.', output: 'R2' },
-                    { text: '4. <strong>Predictive Policing</strong>: Assessing the risk of an individual committing a criminal offense based solely on profiling or personality traits.', output: 'R2' },
-                    { text: '5. <strong>Untargeted Scraping of Facial Images</strong>: Creating or expanding facial recognition databases through untargeted scraping from the internet or CCTV.', output: 'R2' },
-                    { text: '6. <strong>Biometric Categorization</strong>: Inferring sensitive attributes (e.g., race, political opinions, sexual orientation, religious beliefs) from biometric data.', output: 'R2' },
-                    { text: '7. <strong>Emotion Recognition in Workplace/Education</strong>: Inferring emotions of individuals in workplaces or educational institutions (exception: medical/safety reasons like driver fatigue).', output: 'R2' },
-                    { text: '8. <strong>Real-time Remote Biometric Identification</strong>: Using "real-time" facial recognition in publicly accessible spaces for law enforcement.', output: 'R2' },
-                    { text: 'No, my product/service does not involve any of the above design intents/use cases.', next: 'filter3' }
-                ]
-            },
-            'filter3': {
-                step: 3,
-                q: 'What is the format of your AI product/service?',
-                options: [
-                    { text: 'A. An AI System: A complete, directly usable product or application (e.g., AI photo album in a smartphone, autonomous vehicle, SaaS chatbot platform).', next: 'q1' },
-                    { text: 'B. An AI Model/API/Algorithm Package: Not directly facing end-users (e.g., open-source LLMs).', output: 'R3' }
-                ]
-            },
-            'q1': {
-                step: 4,
-                q: 'Is your AI system intended to be used as a safety component of a product, or is it itself a product covered by specific Union harmonization legislation?\n\n<span class="text-sm text-charcoal/60">Safety component definition: A component of a product or an AI system that fulfills a safety function and whose failure or malfunctioning endangers the health and safety of persons or property.\n\nExamples: Water pressure detection systems or fire alarm systems in data centers, obstacle avoidance algorithms in autonomous vehicles, emergency braking AI systems in elevators...</span>',
-                options: [
-                    { text: 'Yes, my AI system is a safety component, and the product itself is regulated by existing EU legislation.', output: 'R4' },
-                    { text: 'No, my AI system is not a safety component.', next: 'q2' }
-                ]
-            },
-            'q2': {
-                step: 5,
-                q: 'Will your AI system be used in any of the following scenarios?',
-                options: [
-                    { text: '<strong>Biometrics</strong>: 1) Non-real-time remote biometric identification; 2) Biometric categorization using sensitive traits; 3) <strong>Emotion recognition in non-work/education settings</strong> (e.g., wearables detecting mood).', output: 'R4' },
-                    { text: '<strong>Critical Infrastructure</strong>: AI systems intended to be used as safety components in the management and operation of critical digital infrastructure, road traffic, or the supply of water, gas, heating, and electricity.', output: 'R4' },
-                    { text: '<strong>Education/Vocational Training</strong>: Determining access/admission, assigning individuals to institutions, or evaluating learning outcomes.', output: 'R4' },
-                    { text: '<strong>Employment and Workers Management</strong>: Filtering applications, evaluating candidates, or task allocation and monitoring worker performance.', output: 'R4' },
-                    { text: '<strong>Essential Public/Private Services</strong>: Evaluating eligibility for essential services/benefits (e.g., healthcare, social assistance), or credit scoring.', output: 'R4' },
-                    { text: '<strong>Law Enforcement/Justice/Migration</strong>: Assisting authorities in evaluating evidence, polygraphs, or examining asylum/visa applications.', output: 'R4' },
-                    { text: 'No, my AI system will not be used in any of these scenarios.', next: 'q3' }
-                ]
-            },
-            'q3': {
-                step: 6,
-                q: 'Does your system involve the following functions?',
-                options: [
-                    { text: '<strong>Human-Machine Interaction</strong>: Chatbots, smart customer service, virtual companions.', output: 'R5' },
-                    { text: '<strong>Synthetic Content (AIGC)</strong>: Generating or manipulating image, audio, or video content (Deepfakes), or generating text of public interest.', output: 'R5' },
-                    { text: '<strong>Biometric Categorization/Emotion Recognition</strong>: E.g., distinguishing different speakers in a meeting via voiceprints.', output: 'R5' },
-                    { text: 'No, my system does not include these functions.', output: 'R6' }
-                ]
+            en: {
+                htmlLang: 'en',
+                pageTitle: 'EU AI Act Risk Classification Assessment Framework | TÜV Rheinland',
+                headerTitle: 'EU AI Act Assessment Framework',
+                headerSubtitle1: 'EU AI Act',
+                headerSubtitle2: 'Risk Classification Assessment Framework',
+                headerReset: 'Restart',
+                welcomeTitle: 'EU AI Act Risk Classification Framework',
+                welcomeDesc: 'Welcome to the AI Risk Classification Assessment Framework. This framework will help you preliminarily understand the compliance risk level of your AI products/services under the EU Artificial Intelligence Act through a series of pre-screening questions.',
+                startBtn: 'Start Assessment',
+                disclaimer: 'The results of this questionnaire are for reference only and do not constitute legal advice. TÜV Rheinland assumes no legal liability. Final conclusions must be based on comprehensive assessments by professional experts.',
+                rights: 'All rights reserved.',
+                backBtn: 'Go Back',
+                resultBadge: '[ Assessment Result ]',
+                copyBtn: 'Copy Result',
+                restartBtn: 'Restart Test',
+                copyAlert: 'Result copied to clipboard.',
+                contactTitle: 'TÜV Rheinland Electrical',
+                contactDesc: 'Relying on a globally authoritative qualification system, we provide end-to-end testing and certification solutions for displays, communications, and smart terminals, covering safety compliance, energy efficiency, EMC, RF, cybersecurity, and AI-related services.',
+                contactUs: 'Contact Us',
+                followUs: 'Follow Us',
+                contactUsShort: 'Contact Us',
+                qr1Alt: 'QR Code',
+                qr2Alt: 'Contact QR Code',
+                tierNames: {
+                    R2: 'Prohibited AI',
+                    R4: 'High Risk AI',
+                    R5: 'Limited Risk AI',
+                    R6: 'Minimal Risk AI'
+                },
+                outputs: {
+                    R1: 'The AI Act primarily regulates AI products/services entering the EU. It does not currently apply to your scenario.\nWe recommend using it as a global compliance benchmark to lay the foundation for technical compliance when entering global markets in the future.',
+                    R2: 'Your product/service may involve Prohibited AI Practices defined in the AI Act. Such services/products are strictly prohibited in the EU. Please revise your product/service definition immediately.',
+                    R3: 'Your product/service is highly likely to be a General-Purpose AI Model. It can be placed on the market but must fulfill obligations such as technical documentation and copyright compliance under the EU AI Act. If your model is deemed to have systemic risks, additional obligations like model evaluation and reporting serious incidents apply.\nFor detailed compliance requirements for General-Purpose AI Models, please contact TÜV Rheinland.',
+                    R4: 'Your AI system is highly likely to be a High-Risk AI System. It can be placed on the market but must fulfill multiple compliance obligations under the EU AI Act, including quality management systems, risk management, data governance, human oversight, and cybersecurity.\n\nTÜV Rheinland provides strategic compliance solutions covering the entire product lifecycle, helping enterprises accurately assess AI risk levels, identify potential risks early, and implement actionable compliance plans to ensure smooth entry into the EU market.',
+                    R5: 'Your AI system is highly likely to be a Limited Risk AI System. It requires adherence to transparency obligations, such as clearly labeling "Generated by AI", "Interacting with AI", and adding digital watermarks.\nFor detailed requirements on transparency declarations, please contact TÜV Rheinland.',
+                    R6: 'Congratulations! Your AI system is highly likely to be a Minimal Risk AI System. It is subject to fewer regulatory restrictions. We recommend voluntarily adhering to codes of conduct or transparency declarations to demonstrate corporate responsibility.'
+                },
+                nodes: {
+                    filter1: {
+                        step: 1,
+                        q: 'Is your AI product/service planned to be sold, distributed, or deployed in EU member states, or will its generated outputs be used by users within the EU?',
+                        options: [
+                            { text: 'Yes, my product/service is intended for the EU market.', next: 'filter2' },
+                            { text: 'No, my product/service is intended for other regions.', output: 'R1' }
+                        ]
+                    },
+                    filter2: {
+                        step: 2,
+                        q: 'Does your AI system involve any of the following design intents/use cases?',
+                        options: [
+                            { text: '1. <strong>Subliminal Techniques</strong>: Using audio-visual stimuli beyond human consciousness to materially distort a person\'s behavior.', output: 'R2' },
+                            { text: '2. <strong>Exploitation of Vulnerabilities</strong>: Targeting vulnerabilities of specific groups (e.g., children, persons with disabilities) to distort behavior.', output: 'R2' },
+                            { text: '3. <strong>Social Scoring</strong>: Evaluating or classifying individuals based on social behavior or personal characteristics, leading to detrimental treatment.', output: 'R2' },
+                            { text: '4. <strong>Predictive Policing</strong>: Assessing the risk of an individual committing a criminal offense based solely on profiling or personality traits.', output: 'R2' },
+                            { text: '5. <strong>Untargeted Scraping of Facial Images</strong>: Creating or expanding facial recognition databases through untargeted scraping from the internet or CCTV.', output: 'R2' },
+                            { text: '6. <strong>Biometric Categorization</strong>: Inferring sensitive attributes (e.g., race, political opinions, sexual orientation, religious beliefs) from biometric data.', output: 'R2' },
+                            { text: '7. <strong>Emotion Recognition in Workplace/Education</strong>: Inferring emotions of individuals in workplaces or educational institutions (exception: medical/safety reasons like driver fatigue).', output: 'R2' },
+                            { text: '8. <strong>Real-time Remote Biometric Identification</strong>: Using "real-time" facial recognition in publicly accessible spaces for law enforcement.', output: 'R2' },
+                            { text: 'No, my product/service does not involve any of the above design intents/use cases.', next: 'filter3' }
+                        ]
+                    },
+                    filter3: {
+                        step: 3,
+                        q: 'What is the format of your AI product/service?',
+                        options: [
+                            { text: 'A. An AI System: A complete, directly usable product or application (e.g., AI photo album in a smartphone, autonomous vehicle, SaaS chatbot platform).', next: 'q1' },
+                            { text: 'B. An AI Model/API/Algorithm Package: Not directly facing end-users (e.g., open-source LLMs).', output: 'R3' }
+                        ]
+                    },
+                    q1: {
+                        step: 4,
+                        q: 'Is your AI system intended to be used as a safety component of a product, or is it itself a product covered by specific Union harmonization legislation?\n\n<span class="text-sm text-charcoal/60">Safety component definition: A component of a product or an AI system that fulfills a safety function and whose failure or malfunctioning endangers the health and safety of persons or property.\n\nExamples: Water pressure detection systems or fire alarm systems in data centers, obstacle avoidance algorithms in autonomous vehicles, emergency braking AI systems in elevators...</span>',
+                        options: [
+                            { text: 'Yes, my AI system is a safety component, and the product itself is regulated by existing EU legislation.', output: 'R4' },
+                            { text: 'No, my AI system is not a safety component.', next: 'q2' }
+                        ]
+                    },
+                    q2: {
+                        step: 5,
+                        q: 'Will your AI system be used in any of the following scenarios?',
+                        options: [
+                            { text: '<strong>Biometrics</strong>: 1) Non-real-time remote biometric identification; 2) Biometric categorization using sensitive traits; 3) <strong>Emotion recognition in non-work/education settings</strong> (e.g., wearables detecting mood).', output: 'R4' },
+                            { text: '<strong>Critical Infrastructure</strong>: AI systems intended to be used as safety components in the management and operation of critical digital infrastructure, road traffic, or the supply of water, gas, heating, and electricity.', output: 'R4' },
+                            { text: '<strong>Education/Vocational Training</strong>: Determining access/admission, assigning individuals to institutions, or evaluating learning outcomes.', output: 'R4' },
+                            { text: '<strong>Employment and Workers Management</strong>: Filtering applications, evaluating candidates, or task allocation and monitoring worker performance.', output: 'R4' },
+                            { text: '<strong>Essential Public/Private Services</strong>: Evaluating eligibility for essential services/benefits (e.g., healthcare, social assistance), or credit scoring.', output: 'R4' },
+                            { text: '<strong>Law Enforcement/Justice/Migration</strong>: Assisting authorities in evaluating evidence, polygraphs, or examining asylum/visa applications.', output: 'R4' },
+                            { text: 'No, my AI system will not be used in any of these scenarios.', next: 'q3' }
+                        ]
+                    },
+                    q3: {
+                        step: 6,
+                        q: 'Does your system involve the following functions?',
+                        options: [
+                            { text: '<strong>Human-Machine Interaction</strong>: Chatbots, smart customer service, virtual companions.', output: 'R5' },
+                            { text: '<strong>Synthetic Content (AIGC)</strong>: Generating or manipulating image, audio, or video content (Deepfakes), or generating text of public interest.', output: 'R5' },
+                            { text: '<strong>Biometric Categorization/Emotion Recognition</strong>: E.g., distinguishing different speakers in a meeting via voiceprints.', output: 'R5' },
+                            { text: 'No, my system does not include these functions.', output: 'R6' }
+                        ]
+                    }
+                }
             }
         };
 
-        const OUTPUTS = {
-            'R1': 'The AI Act primarily regulates AI products/services entering the EU. It does not currently apply to your scenario.\nWe recommend using it as a global compliance benchmark to lay the foundation for technical compliance when entering global markets in the future.',
-            'R2': 'Your product/service may involve Prohibited AI Practices defined in the AI Act. Such services/products are strictly prohibited in the EU. Please revise your product/service definition immediately.',
-            'R3': 'Your product/service is highly likely to be a General-Purpose AI Model. It can be placed on the market but must fulfill obligations such as technical documentation and copyright compliance under the EU AI Act. If your model is deemed to have systemic risks, additional obligations like model evaluation and reporting serious incidents apply.\nFor detailed compliance requirements for General-Purpose AI Models, please contact TÜV Rheinland.',
-            'R4': 'Your AI system is highly likely to be a High-Risk AI System. It can be placed on the market but must fulfill multiple compliance obligations under the EU AI Act, including quality management systems, risk management, data governance, human oversight, and cybersecurity.\n\nTÜV Rheinland provides strategic compliance solutions covering the entire product lifecycle, helping enterprises accurately assess AI risk levels, identify potential risks early, and implement actionable compliance plans to ensure smooth entry into the EU market.',
-            'R5': 'Your AI system is highly likely to be a Limited Risk AI System. It requires adherence to transparency obligations, such as clearly labeling "Generated by AI", "Interacting with AI", and adding digital watermarks.\nFor detailed requirements on transparency declarations, please contact TÜV Rheinland.',
-            'R6': 'Congratulations! Your AI system is highly likely to be a Minimal Risk AI System. It is subject to fewer regulatory restrictions. We recommend voluntarily adhering to codes of conduct or transparency declarations to demonstrate corporate responsibility.'
-        };
-
-        // ==========================================
-        // 2. State Machine & Core Logic
-        // ==========================================
+        let currentLang = 'zh';
         let historyStack = [];
         let currentOutput = null;
 
@@ -530,10 +658,97 @@
         const resultVisualContainer = document.getElementById('result-visual-container');
         const r4ExtraContainer = document.getElementById('r4-extra-content');
 
-        // Regex updated for English terms
+        function t() {
+            return I18N[currentLang];
+        }
+
+        function getNodes() {
+            return t().nodes;
+        }
+
+        function getOutputs() {
+            return t().outputs;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = t().htmlLang;
+            document.title = t().pageTitle;
+
+            document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+
+            document.getElementById('header-title').textContent = t().headerTitle;
+            document.getElementById('header-subtitle').innerHTML = `<span>${t().headerSubtitle1}</span><span>${t().headerSubtitle2}</span>`;
+            document.getElementById('header-reset-text').textContent = t().headerReset;
+
+            document.getElementById('welcome-title').textContent = t().welcomeTitle;
+            document.getElementById('welcome-desc').textContent = t().welcomeDesc;
+            document.getElementById('start-btn-text').textContent = t().startBtn;
+
+            document.getElementById('disclaimer-top').textContent = t().disclaimer;
+            document.getElementById('disclaimer-bottom').textContent = t().disclaimer;
+            document.getElementById('rights-text-top').textContent = t().rights;
+            document.getElementById('rights-text-bottom').textContent = t().rights;
+
+            document.getElementById('back-btn-text').textContent = t().backBtn;
+            document.getElementById('result-back-btn-text').textContent = t().backBtn;
+            document.getElementById('result-badge').textContent = t().resultBadge;
+            document.getElementById('copy-btn-text').textContent = t().copyBtn;
+            document.getElementById('restart-btn-text').textContent = t().restartBtn;
+
+            renderCurrentState();
+        }
+
         function formatItalicEmphasis(text) {
-            const regex = /(High-Risk AI System|General-Purpose AI Model|Limited Risk AI System|Minimal Risk AI System|Prohibited AI Practices|safety component|High-Risk|Minimal Risk|Limited Risk)/g;
-            let formatted = text.replace(regex, '<span class="risk-italic">$1</span>');
+            const zhPatterns = [
+                /高风险人工智能系统/g,
+                /通用AI模型/g,
+                /有限风险人工智能系统/g,
+                /最小风险人工智能系统/g,
+                /禁止性AI实践/g,
+                /安全组件/g,
+                /高风险/g,
+                /有限风险/g,
+                /最小风险/g,
+                /技术文档/g,
+                /系统性风险/g,
+                /质量管理体系/g,
+                /风险管理体系/g,
+                /数据治理/g,
+                /人类监督/g,
+                /网络安全/g,
+                /透明度义务/g
+            ];
+
+            const enPatterns = [
+                /General-Purpose AI Model(s)?/gi,
+                /High-Risk AI System(s)?/gi,
+                /Limited Risk AI System(s)?/gi,
+                /Minimal Risk AI System(s)?/gi,
+                /Prohibited AI Practice(s)?/gi,
+                /Prohibited AI Practices/gi,
+                /safety component(s)?/gi,
+                /High-Risk/gi,
+                /Minimal Risk/gi,
+                /Limited Risk/gi,
+                /technical documentation/gi,
+                /systemic risk(s)?/gi,
+                /quality management( systems?)?/gi,
+                /risk management/gi,
+                /data governance/gi,
+                /human oversight/gi,
+                /cybersecurity/gi,
+                /transparency obligations?/gi
+            ];
+
+            let formatted = text;
+            const patterns = currentLang === 'zh' ? zhPatterns : enPatterns;
+
+            patterns.forEach((pattern) => {
+                formatted = formatted.replace(pattern, (match) => `<span class="risk-italic">${match}</span>`);
+            });
+
             return formatted.replace(/\n/g, '<br>');
         }
 
@@ -554,21 +769,26 @@
             gsap.to(greetingView, {
                 opacity: 0, scale: 0.98, duration: 0.3, ease: 'power2.in', onComplete: () => {
                     historyStack = ['filter1'];
-                    greetingView.style.display = 'none'; greetingView.style.opacity = 1; greetingView.style.transform = 'scale(1)';
+                    greetingView.style.display = 'none';
+                    greetingView.style.opacity = 1;
+                    greetingView.style.transform = 'scale(1)';
                     renderCurrentState();
                 }
             });
         }
 
         function renderNode() {
+            const nodes = getNodes();
             const nodeId = historyStack[historyStack.length - 1];
-            const node = TRIAGE_NODES[nodeId];
+            const node = nodes[nodeId];
 
             btnBack.disabled = historyStack.length === 1;
             progressBar.style.width = `${(node.step / 6) * 100}%`;
             questionText.innerHTML = node.q.replace(/\n/g, '<br>');
 
-            Array.from(optionsContainer.children).forEach(child => { if (child.id !== 'question-view') child.remove(); });
+            Array.from(optionsContainer.children).forEach(child => {
+                if (child.id !== 'question-view') child.remove();
+            });
             optionsContainer.scrollTop = 0;
 
             node.options.forEach((opt) => {
@@ -590,7 +810,9 @@
                 optionsContainer.appendChild(btn);
             });
 
-            greetingView.style.display = 'none'; resultView.style.display = 'none'; consoleContainer.style.display = 'flex';
+            greetingView.style.display = 'none';
+            resultView.style.display = 'none';
+            consoleContainer.style.display = 'flex';
             gsap.fromTo(optionsContainer.children, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
         }
 
@@ -599,10 +821,15 @@
                 opacity: 0, scale: 0.98, duration: 0.2, ease: 'power2.in', onComplete: () => {
                     if (opt.output) currentOutput = opt.output;
                     else if (opt.next) historyStack.push(opt.next);
-                    consoleContainer.style.opacity = 1; consoleContainer.style.transform = 'scale(1)';
+                    consoleContainer.style.opacity = 1;
+                    consoleContainer.style.transform = 'scale(1)';
                     renderCurrentState();
                 }
             });
+        }
+
+        function getTierDisplayName(code) {
+            return t().tierNames[code] || '';
         }
 
         function renderOutput() {
@@ -611,27 +838,23 @@
 
             let visualHTML = '';
 
-            // =====================================
-            // Isometric Pyramid SVG
-            // =====================================
             if (['R2', 'R4', 'R5', 'R6'].includes(currentOutput)) {
-
                 const TIERS = [
-                    { name: 'Prohibited AI', colorLeft: '#B33B18', colorRight: '#DA4B21', activeOut: 'R2' },
-                    { name: 'High Risk AI', colorLeft: '#BE6300', colorRight: '#E57800', activeOut: 'R4' },
-                    { name: 'Limited Risk AI', colorLeft: '#DBA10A', colorRight: '#F9BB10', activeOut: 'R5' },
-                    { name: 'Minimal Risk AI', colorLeft: '#008896', colorRight: '#008896', activeOut: 'R6' }
+                    { name: getTierDisplayName('R2'), colorLeft: '#B33B18', colorRight: '#DA4B21', activeOut: 'R2' },
+                    { name: getTierDisplayName('R4'), colorLeft: '#BE6300', colorRight: '#E57800', activeOut: 'R4' },
+                    { name: getTierDisplayName('R5'), colorLeft: '#DBA10A', colorRight: '#F9BB10', activeOut: 'R5' },
+                    { name: getTierDisplayName('R6'), colorLeft: '#008896', colorRight: '#008896', activeOut: 'R6' }
                 ];
 
-                let t = 0;
+                let tProgress = 0;
                 let svgContent = '';
 
                 TIERS.forEach((tier) => {
                     let isActive = (tier.activeOut === currentOutput);
                     let size = isActive ? 0.55 : 0.15;
-                    let t1 = t;
-                    let t2 = t + size;
-                    t = t2;
+                    let t1 = tProgress;
+                    let t2 = tProgress + size;
+                    tProgress = t2;
 
                     const X_CENTER = 130;
                     const DX = 100;
@@ -670,7 +893,7 @@
                         <g class="tier-layer" opacity="0">
                             ${faceLeft}
                             ${faceRight}
-                            ${isActive ? `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="white" opacity="0.1" />` : ''} 
+                            ${isActive ? `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="white" opacity="0.1" />` : ''}
                             ${callout}
                         </g>
                     `;
@@ -683,11 +906,7 @@
                     </svg>
                 </div>
                 `;
-            }
-            // =====================================
-            // Special State SVG (R1)
-            // =====================================
-            else if (currentOutput === 'R1') {
+            } else if (currentOutput === 'R1') {
                 visualHTML = `
                 <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
                     <svg class="absolute inset-0 w-full h-full animate-[spin_20s_linear_infinite] opacity-30" viewBox="0 0 100 100">
@@ -702,11 +921,7 @@
                     </svg>
                     <div class="absolute w-3 h-3 bg-techCyan rounded-full top-[30%] left-[25%] animate-ping opacity-60"></div>
                 </div>`;
-            }
-            // =====================================
-            // Special State SVG (R3)
-            // =====================================
-            else if (currentOutput === 'R3') {
+            } else if (currentOutput === 'R3') {
                 visualHTML = `
                 <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
                     <div class="absolute inset-0 bg-techCyan/10 blur-2xl rounded-full"></div>
@@ -738,57 +953,54 @@
             }
 
             resultVisualContainer.innerHTML = visualHTML;
-            outputText.innerHTML = formatItalicEmphasis(OUTPUTS[currentOutput]);
+            outputText.innerHTML = formatItalicEmphasis(getOutputs()[currentOutput]);
 
-            // =====================================
-            // Contact Card
-            // =====================================
             r4ExtraContainer.innerHTML = `
                 <div class="w-full bg-white/70 border border-tuvBlue/15 rounded-[1.5rem] shadow-sm relative overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                     <div class="absolute -right-8 -top-8 w-40 h-40 bg-tuvBlue/5 rounded-full blur-2xl pointer-events-none"></div>
-                    
+
                     <div class="flex-1 flex flex-col justify-center">
                         <h4 class="text-tuvBlue font-bold text-[14px] md:text-base mb-3 flex items-center gap-2">
                             <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                            TÜV Rheinland Electrical
+                            ${t().contactTitle}
                         </h4>
                         <p class="text-[12px] md:text-[13px] text-charcoal/70 leading-relaxed text-justify">
-                            Relying on a globally authoritative qualification system, we provide end-to-end testing and certification solutions for displays, communications, and smart terminals, covering safety compliance, energy efficiency, EMC, RF, cybersecurity, and AI-related services.
+                            ${t().contactDesc}
                         </p>
                     </div>
-                    
+
                     <div class="hidden md:block w-px bg-tuvBlue/10 self-stretch"></div>
                     <div class="md:hidden h-px w-full bg-tuvBlue/10"></div>
 
                     <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center shrink-0 w-full sm:w-auto">
                         <div class="space-y-3">
-                            <div class="text-[10px] uppercase font-mono tracking-widest text-muted font-bold">Contact Us</div>
+                            <div class="text-[10px] uppercase font-mono tracking-widest text-muted font-bold">${t().contactUs}</div>
                             <div class="flex items-center gap-3 text-[12px] text-charcoal">
                                 <div class="w-7 h-7 rounded-full bg-tuvBlue/10 flex items-center justify-center text-tuvBlue shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                                 </div>
-                                <span class="font-mono font-medium text-[13px]">+86 755 8268 1288<span class="text-charcoal/40 text-[10px] ml-1"></span></span>
+                                <span class="font-mono font-medium text-[13px]">+86 755 8268 1288</span>
                             </div>
                             <div class="flex items-center gap-3 text-[12px] text-charcoal">
                                 <div class="w-7 h-7 rounded-full bg-tuvBlue/10 flex items-center justify-center text-tuvBlue shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                                 </div>
-                                <span class="font-mono font-medium text-[13px]">Evelyn.Tang@tuv.com<span class="text-charcoal/40 text-[10px] ml-1"></span></span>
+                                <span class="font-mono font-medium text-[13px]">Evelyn.Tang@tuv.com</span>
                             </div>
                         </div>
-                        
+
                         <div class="flex gap-3 shrink-0 w-full sm:w-auto justify-center sm:justify-start self-center sm:self-auto">
                             <div class="flex flex-col items-center gap-1.5">
                                 <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
-                                    <img src="./qrcode.jpg" alt="QR Code" class="w-full h-full object-cover rounded-sm">
+                                    <img src="./qrcode.jpg" alt="${t().qr1Alt}" class="w-full h-full object-cover rounded-sm">
                                 </div>
-                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">Follow Us</span>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${t().followUs}</span>
                             </div>
                             <div class="flex flex-col items-center gap-1.5">
                                 <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
-                                    <img src="./Registration.jpg" alt="Contact QR Code" class="w-full h-full object-cover rounded-sm">
+                                    <img src="./Registration.jpg" alt="${t().qr2Alt}" class="w-full h-full object-cover rounded-sm">
                                 </div>
-                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">Contact Us</span>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${t().contactUsShort}</span>
                             </div>
                         </div>
                     </div>
@@ -817,7 +1029,10 @@
             if (historyStack.length > 1) {
                 gsap.to(consoleContainer, {
                     opacity: 0, x: 20, duration: 0.2, ease: 'power2.in', onComplete: () => {
-                        historyStack.pop(); currentOutput = null; consoleContainer.style.opacity = 1; consoleContainer.style.transform = 'translateX(0)';
+                        historyStack.pop();
+                        currentOutput = null;
+                        consoleContainer.style.opacity = 1;
+                        consoleContainer.style.transform = 'translateX(0)';
                         renderCurrentState();
                     }
                 });
@@ -827,7 +1042,9 @@
         function goBackFromResult() {
             gsap.to(resultView, {
                 opacity: 0, scale: 0.98, duration: 0.2, ease: 'power2.in', onComplete: () => {
-                    currentOutput = null; resultView.style.opacity = 1; resultView.style.transform = 'scale(1)';
+                    currentOutput = null;
+                    resultView.style.opacity = 1;
+                    resultView.style.transform = 'scale(1)';
                     renderCurrentState();
                 }
             });
@@ -836,17 +1053,22 @@
         function resetEngine() {
             gsap.to([consoleContainer, resultView], {
                 opacity: 0, duration: 0.3, onComplete: () => {
-                    historyStack = []; currentOutput = null; consoleContainer.style.opacity = 1; resultView.style.opacity = 1;
+                    historyStack = [];
+                    currentOutput = null;
+                    consoleContainer.style.opacity = 1;
+                    resultView.style.opacity = 1;
                     renderCurrentState();
                 }
             });
         }
 
         function copyResult() {
-            navigator.clipboard.writeText(OUTPUTS[currentOutput]).then(() => { alert('Result copied to clipboard.'); });
+            navigator.clipboard.writeText(getOutputs()[currentOutput]).then(() => {
+                alert(t().copyAlert);
+            });
         }
 
-        // Initialize
+        setLanguage('zh');
         renderCurrentState();
     </script>
 </body>
