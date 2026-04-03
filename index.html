@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EU AI Act 风险分级评估框架 | TÜV Rheinland</title>
 
+    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
         rel="stylesheet">
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,6 +41,7 @@
         }
     </script>
 
+    <!-- GSAP 3 Animation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
@@ -212,15 +215,13 @@
             }
         }
 
+        /* Strictly keep your English version style */
         .risk-italic {
-            font-family: 'Inter', '-apple-system', sans-serif;
-            font-style: normal;
-            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 600;
             color: #0071B9;
-            background: rgba(0, 113, 185, 0.08);
-            padding: 0 4px;
-            border-radius: 4px;
-            display: inline-block;
+            font-size: 1.15em;
         }
 
         .output-text {
@@ -249,7 +250,7 @@
                 <div class="w-1.5 h-1.5 bg-tuvBlue rounded-[1px]"></div>
             </div>
             <div id="header-title"
-                class="font-display font-bold tracking-tight text-[13px] sm:text-base md:text-lg text-charcoal whitespace-nowrap overflow-hidden text-ellipsis max-w-[40vw] sm:max-w-none">
+                class="font-display font-bold tracking-tight text-[13px] sm:text-base md:text-lg text-charcoal whitespace-nowrap overflow-hidden text-ellipsis max-w-[38vw] sm:max-w-none">
                 EU AI Act 风险分级评估框架
             </div>
             <div id="header-subtitle"
@@ -266,7 +267,7 @@
                 <button id="lang-en" onclick="setLanguage('en')"
                     class="px-3 py-1.5 text-[11px] font-mono tracking-widest text-tuvBlue">EN</button>
             </div>
-            <button id="header-reset" onclick="resetEngine()"
+            <button onclick="resetEngine()"
                 class="flex items-center gap-2 px-4 py-1.5 rounded bg-tuvBlue/5 font-mono text-[11px] tracking-widest uppercase border border-tuvBlue/20 text-tuvBlue hover:bg-tuvBlue hover:text-white transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2">
@@ -308,15 +309,13 @@
                         <div
                             class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         </div>
-                        <div class="relative z-10 flex items-center gap-3">
-                            <span id="start-btn-text">开始测试</span>
-                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                        <div class="relative z-10 flex items-center gap-3"><span id="start-btn-text">开始测试</span><svg
+                                class="w-4 h-4 group-hover:translate-x-1 transition-transform"
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"></path>
                                 <path d="m12 5 7 7-7 7"></path>
-                            </svg>
-                        </div>
+                            </svg></div>
                     </button>
                 </div>
                 <div class="shrink-0 mt-8 text-center">
@@ -324,7 +323,8 @@
                         本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。
                     </p>
                     <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland.
-                        <span id="rights-text-top">All rights reserved.</span></p>
+                        <span id="rights-top">All rights reserved.</span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -343,8 +343,7 @@
                                 fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="m12 19-7-7 7-7" />
                                 <path d="M19 12H5" />
-                            </svg>
-                            <span id="back-btn-text">返回上一题</span>
+                            </svg> <span id="back-btn-text">返回上一题</span>
                         </button>
                     </div>
                     <div class="w-full md:w-1/3 h-1.5 bg-tuvBlue/10 rounded-full overflow-hidden">
@@ -377,8 +376,7 @@
                             stroke="currentColor" stroke-width="2">
                             <path d="m12 19-7-7 7-7" />
                             <path d="M19 12H5" />
-                        </svg>
-                        <span id="result-back-btn-text">返回上一题</span>
+                        </svg> <span id="result-back-btn-text">返回上一题</span>
                     </button>
                     <span id="result-badge"
                         class="ml-auto font-mono text-[11px] text-tuvBlue font-bold bg-tuvBlue/5 px-3 py-1.5 rounded border border-tuvBlue/20 tracking-widest">[
@@ -426,44 +424,45 @@
                         本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。
                     </p>
                     <p class="mt-1 font-mono text-[10px] text-charcoal/40 tracking-wide">&copy; 2026 TÜV Rheinland.
-                        <span id="rights-text-bottom">All rights reserved.</span></p>
+                        <span id="rights-bottom">All rights reserved.</span>
+                    </p>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        const I18N = {
+        const CONTENT = {
             zh: {
                 htmlLang: 'zh-CN',
-                pageTitle: 'EU AI Act 风险分级评估框架 | TÜV Rheinland',
+                title: 'EU AI Act 风险分级评估框架 | TÜV Rheinland',
                 headerTitle: 'EU AI Act 风险分级评估框架',
-                headerSubtitle1: 'EU AI Act',
-                headerSubtitle2: 'Risk Classification Assessment Framework',
-                headerReset: '重新测试',
+                headerSub1: 'EU AI Act',
+                headerSub2: 'Risk Classification Assessment Framework',
+                reset: '重新测试',
                 welcomeTitle: 'EU AI Act 风险分级评估框架',
                 welcomeDesc: '欢迎使用AI风险分级评估框架。本框架将通过一系列预审问题，帮助您初步了解 AI 产品/服务在《欧盟人工智能法案》下的合规风险等级。',
-                startBtn: '开始测试',
+                start: '开始测试',
                 disclaimer: '本问卷结果仅供参考，不构成任何法律意见或决策依据，TÜV莱茵不承担相关法律责任，最终须以专业专家综合评估结论为准。',
                 rights: 'All rights reserved.',
-                backBtn: '返回上一题',
+                back: '返回上一题',
                 resultBadge: '[ 测试结果 ]',
-                copyBtn: '拷贝结果',
-                restartBtn: '重新测试',
+                copy: '拷贝结果',
+                restartTest: '重新测试',
                 copyAlert: '结果已拷贝。',
-                contactTitle: 'TÜV莱茵电子电气产品服务',
-                contactDesc: '依托全球权威资质体系，面向显示、通信与智能终端等多领域产品，提供涵盖安全合规、能效、EMC、RF、网络安全及AI相关服务在内的全链条检测认证解决方案。',
-                contactUs: '联系我们',
-                followUs: '关注我们',
-                contactUsShort: '联系我们',
-                qr1Alt: '服务号二维码',
-                qr2Alt: '问卷调查二维码',
                 tierNames: {
                     R2: '禁止性AI实践',
                     R4: '高风险人工智能系统',
                     R5: '有限风险人工智能系统',
                     R6: '最小风险人工智能系统'
                 },
+                contactTitle: 'TÜV莱茵电子电气产品服务',
+                contactDesc: '依托全球权威资质体系，面向显示、通信与智能终端等多领域产品，提供涵盖安全合规、能效、EMC、RF、网络安全及AI相关服务在内的全链条检测认证解决方案。',
+                contactUs: 'Contact Us',
+                followUs: '关注我们',
+                contactShort: '联系我们',
+                qr1Alt: '服务号二维码',
+                qr2Alt: '问卷调查二维码',
                 outputs: {
                     R1: '本法案仅对进入欧盟的AI产品/服务进行规范，暂不适用您的场景。\n建议您将其作为全球合规基准参考，为您未来进入全球市场奠定技术合规的基础。',
                     R2: '您的产品/服务可能涉及《人工智能法案》中所定义的禁止性AI实践，此类服务/产品在欧盟被严格禁止，请立即修改产品/服务定义。',
@@ -473,7 +472,7 @@
                     R6: '恭喜您！您的AI系统很大可能属于最小风险人工智能系统，受到的监管限制较少，建议您可以自愿签署透明度义务声明/告知，展示企业的合规责任感。'
                 },
                 nodes: {
-                    filter1: {
+                    'filter1': {
                         step: 1,
                         q: '您的AI产品/服务是否计划在欧盟成员国进行销售、分发、部署，或其生成的输出结果会被欧盟境内的用户使用？',
                         options: [
@@ -481,7 +480,7 @@
                             { text: '否，我的产品/服务准备进入其他地区。', output: 'R1' }
                         ]
                     },
-                    filter2: {
+                    'filter2': {
                         step: 2,
                         q: '您的AI系统是否涉及任何一项设计意图/使用场景？',
                         options: [
@@ -496,7 +495,7 @@
                             { text: '否，我的产品/服务都不涉及如上设计意图/使用场景', next: 'filter3' }
                         ]
                     },
-                    filter3: {
+                    'filter3': {
                         step: 3,
                         q: '您提供的AI产品/服务是什么形态？',
                         options: [
@@ -504,7 +503,7 @@
                             { text: 'B. 一个AI模型/API/算法包，本身不直接面向最终用户（如：开源的LLM）', output: 'R3' }
                         ]
                     },
-                    q1: {
+                    'q1': {
                         step: 4,
                         q: '您的AI系统是否作为某产品的安全组件，且该产品本身受欧盟现有法规监管？\n\n<span class="text-sm text-charcoal/60">安全组件（safety component）定义：产品或人工智能系统中用于实现安全功能的组成部分；该组成部分一旦发生故障或失灵，可能危及人体健康与人身安全，或危及财产安全。\n\n示例： 云计算中心的水压检测系统或火灾报警系统、自动驾驶汽车的避障算法、电梯的紧急制动AI系统……</span>',
                         options: [
@@ -512,7 +511,7 @@
                             { text: '否，我的AI系统不是一个安全组件。', next: 'q2' }
                         ]
                     },
-                    q2: {
+                    'q2': {
                         step: 5,
                         q: '您的AI系统是否将用于以下场景？',
                         options: [
@@ -525,7 +524,7 @@
                             { text: '否，我的AI系统不会运用在如上任意场景中', next: 'q3' }
                         ]
                     },
-                    q3: {
+                    'q3': {
                         step: 6,
                         q: '您的系统是否涉及以下功能？',
                         options: [
@@ -540,44 +539,44 @@
 
             en: {
                 htmlLang: 'en',
-                pageTitle: 'EU AI Act Risk Classification Assessment Framework | TÜV Rheinland',
+                title: 'EU AI Act Risk Classification Assessment Framework | TÜV Rheinland',
                 headerTitle: 'EU AI Act Assessment Framework',
-                headerSubtitle1: 'EU AI Act',
-                headerSubtitle2: 'Risk Classification Assessment Framework',
-                headerReset: 'Restart',
+                headerSub1: 'EU AI Act',
+                headerSub2: 'Risk Classification Assessment Framework',
+                reset: 'Restart',
                 welcomeTitle: 'EU AI Act Risk Classification Framework',
                 welcomeDesc: 'Welcome to the AI Risk Classification Assessment Framework. This framework will help you preliminarily understand the compliance risk level of your AI products/services under the EU Artificial Intelligence Act through a series of pre-screening questions.',
-                startBtn: 'Start Assessment',
+                start: 'Start Assessment',
                 disclaimer: 'The results of this questionnaire are for reference only and do not constitute legal advice. TÜV Rheinland assumes no legal liability. Final conclusions must be based on comprehensive assessments by professional experts.',
                 rights: 'All rights reserved.',
-                backBtn: 'Go Back',
+                back: 'Go Back',
                 resultBadge: '[ Assessment Result ]',
-                copyBtn: 'Copy Result',
-                restartBtn: 'Restart Test',
+                copy: 'Copy Result',
+                restartTest: 'Restart Test',
                 copyAlert: 'Result copied to clipboard.',
-                contactTitle: 'TÜV Rheinland Electrical',
-                contactDesc: 'Relying on a globally authoritative qualification system, we provide end-to-end testing and certification solutions for displays, communications, and smart terminals, covering safety compliance, energy efficiency, EMC, RF, cybersecurity, and AI-related services.',
-                contactUs: 'Contact Us',
-                followUs: 'Follow Us',
-                contactUsShort: 'Contact Us',
-                qr1Alt: 'QR Code',
-                qr2Alt: 'Contact QR Code',
                 tierNames: {
                     R2: 'Prohibited AI',
                     R4: 'High Risk AI',
                     R5: 'Limited Risk AI',
                     R6: 'Minimal Risk AI'
                 },
+                contactTitle: 'TÜV Rheinland Electrical',
+                contactDesc: 'Relying on a globally authoritative qualification system, we provide end-to-end testing and certification solutions for displays, communications, and smart terminals, covering safety compliance, energy efficiency, EMC, RF, cybersecurity, and AI-related services.',
+                contactUs: 'Contact Us',
+                followUs: 'Follow Us',
+                contactShort: 'Contact Us',
+                qr1Alt: 'QR Code',
+                qr2Alt: 'Contact QR Code',
                 outputs: {
                     R1: 'The AI Act primarily regulates AI products/services entering the EU. It does not currently apply to your scenario.\nWe recommend using it as a global compliance benchmark to lay the foundation for technical compliance when entering global markets in the future.',
                     R2: 'Your product/service may involve Prohibited AI Practices defined in the AI Act. Such services/products are strictly prohibited in the EU. Please revise your product/service definition immediately.',
-                    R3: 'Your product/service is highly likely to be a General-Purpose AI Model. It can be placed on the market but must fulfill obligations such as technical documentation and copyright compliance under the EU AI Act. If your model is deemed to have systemic risks, additional obligations like model evaluation and reporting serious incidents apply.\nFor detailed compliance requirements for General-Purpose AI Models, please contact TÜV Rheinland.',
+                    R3: 'Your product/service is highly likely to be a General-Purpose AI Model. It can be placed on the market but must fulfill obligations such as technical documentation and copyright compliance under the EU AI Act. If your model is deemed to have systemic risks, additional obligations like model evaluation and reporting serious incidents apply.\nFor detailed compliance requirements for General-Purpose AI Systems, please contact TÜV Rheinland.',
                     R4: 'Your AI system is highly likely to be a High-Risk AI System. It can be placed on the market but must fulfill multiple compliance obligations under the EU AI Act, including quality management systems, risk management, data governance, human oversight, and cybersecurity.\n\nTÜV Rheinland provides strategic compliance solutions covering the entire product lifecycle, helping enterprises accurately assess AI risk levels, identify potential risks early, and implement actionable compliance plans to ensure smooth entry into the EU market.',
                     R5: 'Your AI system is highly likely to be a Limited Risk AI System. It requires adherence to transparency obligations, such as clearly labeling "Generated by AI", "Interacting with AI", and adding digital watermarks.\nFor detailed requirements on transparency declarations, please contact TÜV Rheinland.',
                     R6: 'Congratulations! Your AI system is highly likely to be a Minimal Risk AI System. It is subject to fewer regulatory restrictions. We recommend voluntarily adhering to codes of conduct or transparency declarations to demonstrate corporate responsibility.'
                 },
                 nodes: {
-                    filter1: {
+                    'filter1': {
                         step: 1,
                         q: 'Is your AI product/service planned to be sold, distributed, or deployed in EU member states, or will its generated outputs be used by users within the EU?',
                         options: [
@@ -585,7 +584,7 @@
                             { text: 'No, my product/service is intended for other regions.', output: 'R1' }
                         ]
                     },
-                    filter2: {
+                    'filter2': {
                         step: 2,
                         q: 'Does your AI system involve any of the following design intents/use cases?',
                         options: [
@@ -600,7 +599,7 @@
                             { text: 'No, my product/service does not involve any of the above design intents/use cases.', next: 'filter3' }
                         ]
                     },
-                    filter3: {
+                    'filter3': {
                         step: 3,
                         q: 'What is the format of your AI product/service?',
                         options: [
@@ -608,7 +607,7 @@
                             { text: 'B. An AI Model/API/Algorithm Package: Not directly facing end-users (e.g., open-source LLMs).', output: 'R3' }
                         ]
                     },
-                    q1: {
+                    'q1': {
                         step: 4,
                         q: 'Is your AI system intended to be used as a safety component of a product, or is it itself a product covered by specific Union harmonization legislation?\n\n<span class="text-sm text-charcoal/60">Safety component definition: A component of a product or an AI system that fulfills a safety function and whose failure or malfunctioning endangers the health and safety of persons or property.\n\nExamples: Water pressure detection systems or fire alarm systems in data centers, obstacle avoidance algorithms in autonomous vehicles, emergency braking AI systems in elevators...</span>',
                         options: [
@@ -616,7 +615,7 @@
                             { text: 'No, my AI system is not a safety component.', next: 'q2' }
                         ]
                     },
-                    q2: {
+                    'q2': {
                         step: 5,
                         q: 'Will your AI system be used in any of the following scenarios?',
                         options: [
@@ -629,7 +628,7 @@
                             { text: 'No, my AI system will not be used in any of these scenarios.', next: 'q3' }
                         ]
                     },
-                    q3: {
+                    'q3': {
                         step: 6,
                         q: 'Does your system involve the following functions?',
                         options: [
@@ -658,97 +657,60 @@
         const resultVisualContainer = document.getElementById('result-visual-container');
         const r4ExtraContainer = document.getElementById('r4-extra-content');
 
-        function t() {
-            return I18N[currentLang];
+        function content() {
+            return CONTENT[currentLang];
         }
 
         function getNodes() {
-            return t().nodes;
+            return content().nodes;
         }
 
         function getOutputs() {
-            return t().outputs;
+            return content().outputs;
         }
 
         function setLanguage(lang) {
             currentLang = lang;
-            document.documentElement.lang = t().htmlLang;
-            document.title = t().pageTitle;
+
+            document.documentElement.lang = content().htmlLang;
+            document.title = content().title;
 
             document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
             document.getElementById('lang-en').classList.toggle('active', lang === 'en');
 
-            document.getElementById('header-title').textContent = t().headerTitle;
-            document.getElementById('header-subtitle').innerHTML = `<span>${t().headerSubtitle1}</span><span>${t().headerSubtitle2}</span>`;
-            document.getElementById('header-reset-text').textContent = t().headerReset;
+            document.getElementById('header-title').textContent = content().headerTitle;
+            document.getElementById('header-subtitle').innerHTML = `<span>${content().headerSub1}</span><span>${content().headerSub2}</span>`;
+            document.getElementById('header-reset-text').textContent = content().reset;
 
-            document.getElementById('welcome-title').textContent = t().welcomeTitle;
-            document.getElementById('welcome-desc').textContent = t().welcomeDesc;
-            document.getElementById('start-btn-text').textContent = t().startBtn;
+            document.getElementById('welcome-title').textContent = content().welcomeTitle;
+            document.getElementById('welcome-desc').textContent = content().welcomeDesc;
+            document.getElementById('start-btn-text').textContent = content().start;
 
-            document.getElementById('disclaimer-top').textContent = t().disclaimer;
-            document.getElementById('disclaimer-bottom').textContent = t().disclaimer;
-            document.getElementById('rights-text-top').textContent = t().rights;
-            document.getElementById('rights-text-bottom').textContent = t().rights;
+            document.getElementById('disclaimer-top').textContent = content().disclaimer;
+            document.getElementById('disclaimer-bottom').textContent = content().disclaimer;
+            document.getElementById('rights-top').textContent = content().rights;
+            document.getElementById('rights-bottom').textContent = content().rights;
 
-            document.getElementById('back-btn-text').textContent = t().backBtn;
-            document.getElementById('result-back-btn-text').textContent = t().backBtn;
-            document.getElementById('result-badge').textContent = t().resultBadge;
-            document.getElementById('copy-btn-text').textContent = t().copyBtn;
-            document.getElementById('restart-btn-text').textContent = t().restartBtn;
+            document.getElementById('back-btn-text').textContent = content().back;
+            document.getElementById('result-back-btn-text').textContent = content().back;
+            document.getElementById('result-badge').textContent = content().resultBadge;
+            document.getElementById('copy-btn-text').textContent = content().copy;
+            document.getElementById('restart-btn-text').textContent = content().restartTest;
 
             renderCurrentState();
         }
 
+        // Strictly follow your English regex; Chinese keeps original behavior
         function formatItalicEmphasis(text) {
-            const zhPatterns = [
-                /高风险人工智能系统/g,
-                /通用AI模型/g,
-                /有限风险人工智能系统/g,
-                /最小风险人工智能系统/g,
-                /禁止性AI实践/g,
-                /安全组件/g,
-                /高风险/g,
-                /有限风险/g,
-                /最小风险/g,
-                /技术文档/g,
-                /系统性风险/g,
-                /质量管理体系/g,
-                /风险管理体系/g,
-                /数据治理/g,
-                /人类监督/g,
-                /网络安全/g,
-                /透明度义务/g
-            ];
+            let regex;
 
-            const enPatterns = [
-                /General-Purpose AI Model(s)?/gi,
-                /High-Risk AI System(s)?/gi,
-                /Limited Risk AI System(s)?/gi,
-                /Minimal Risk AI System(s)?/gi,
-                /Prohibited AI Practice(s)?/gi,
-                /Prohibited AI Practices/gi,
-                /safety component(s)?/gi,
-                /High-Risk/gi,
-                /Minimal Risk/gi,
-                /Limited Risk/gi,
-                /technical documentation/gi,
-                /systemic risk(s)?/gi,
-                /quality management( systems?)?/gi,
-                /risk management/gi,
-                /data governance/gi,
-                /human oversight/gi,
-                /cybersecurity/gi,
-                /transparency obligations?/gi
-            ];
+            if (currentLang === 'zh') {
+                regex = /(高风险人工智能系统|通用AI模型|有限风险人工智能系统|最小风险人工智能系统|禁止性AI实践|安全组件|高风险|最小风险|有限风险)/g;
+            } else {
+                regex = /(High-Risk AI System|General-Purpose AI Model|Limited Risk AI System|Minimal Risk AI System|Prohibited AI Practices|safety component|High-Risk|Minimal Risk|Limited Risk)/g;
+            }
 
-            let formatted = text;
-            const patterns = currentLang === 'zh' ? zhPatterns : enPatterns;
-
-            patterns.forEach((pattern) => {
-                formatted = formatted.replace(pattern, (match) => `<span class="risk-italic">${match}</span>`);
-            });
-
+            let formatted = text.replace(regex, '<span class="risk-italic">$1</span>');
             return formatted.replace(/\n/g, '<br>');
         }
 
@@ -778,9 +740,8 @@
         }
 
         function renderNode() {
-            const nodes = getNodes();
             const nodeId = historyStack[historyStack.length - 1];
-            const node = nodes[nodeId];
+            const node = getNodes()[nodeId];
 
             btnBack.disabled = historyStack.length === 1;
             progressBar.style.width = `${(node.step / 6) * 100}%`;
@@ -828,10 +789,6 @@
             });
         }
 
-        function getTierDisplayName(code) {
-            return t().tierNames[code] || '';
-        }
-
         function renderOutput() {
             consoleContainer.style.display = 'none';
             resultView.style.display = 'flex';
@@ -840,21 +797,21 @@
 
             if (['R2', 'R4', 'R5', 'R6'].includes(currentOutput)) {
                 const TIERS = [
-                    { name: getTierDisplayName('R2'), colorLeft: '#B33B18', colorRight: '#DA4B21', activeOut: 'R2' },
-                    { name: getTierDisplayName('R4'), colorLeft: '#BE6300', colorRight: '#E57800', activeOut: 'R4' },
-                    { name: getTierDisplayName('R5'), colorLeft: '#DBA10A', colorRight: '#F9BB10', activeOut: 'R5' },
-                    { name: getTierDisplayName('R6'), colorLeft: '#008896', colorRight: '#008896', activeOut: 'R6' }
+                    { name: content().tierNames.R2, colorLeft: '#B33B18', colorRight: '#DA4B21', activeOut: 'R2' },
+                    { name: content().tierNames.R4, colorLeft: '#BE6300', colorRight: '#E57800', activeOut: 'R4' },
+                    { name: content().tierNames.R5, colorLeft: '#DBA10A', colorRight: '#F9BB10', activeOut: 'R5' },
+                    { name: content().tierNames.R6, colorLeft: '#008896', colorRight: '#008896', activeOut: 'R6' }
                 ];
 
-                let tProgress = 0;
+                let t = 0;
                 let svgContent = '';
 
                 TIERS.forEach((tier) => {
                     let isActive = (tier.activeOut === currentOutput);
                     let size = isActive ? 0.55 : 0.15;
-                    let t1 = tProgress;
-                    let t2 = tProgress + size;
-                    tProgress = t2;
+                    let t1 = t;
+                    let t2 = t + size;
+                    t = t2;
 
                     const X_CENTER = 130;
                     const DX = 100;
@@ -893,7 +850,7 @@
                         <g class="tier-layer" opacity="0">
                             ${faceLeft}
                             ${faceRight}
-                            ${isActive ? `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="white" opacity="0.1" />` : ''}
+                            ${isActive ? `<polygon points="${pt1} ${pr2} ${pr3} ${pt4}" fill="white" opacity="0.1" />` : ''} 
                             ${callout}
                         </g>
                     `;
@@ -906,7 +863,8 @@
                     </svg>
                 </div>
                 `;
-            } else if (currentOutput === 'R1') {
+            }
+            else if (currentOutput === 'R1') {
                 visualHTML = `
                 <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
                     <svg class="absolute inset-0 w-full h-full animate-[spin_20s_linear_infinite] opacity-30" viewBox="0 0 100 100">
@@ -921,7 +879,8 @@
                     </svg>
                     <div class="absolute w-3 h-3 bg-techCyan rounded-full top-[30%] left-[25%] animate-ping opacity-60"></div>
                 </div>`;
-            } else if (currentOutput === 'R3') {
+            }
+            else if (currentOutput === 'R3') {
                 visualHTML = `
                 <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center text-tuvBlue">
                     <div class="absolute inset-0 bg-techCyan/10 blur-2xl rounded-full"></div>
@@ -958,23 +917,23 @@
             r4ExtraContainer.innerHTML = `
                 <div class="w-full bg-white/70 border border-tuvBlue/15 rounded-[1.5rem] shadow-sm relative overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                     <div class="absolute -right-8 -top-8 w-40 h-40 bg-tuvBlue/5 rounded-full blur-2xl pointer-events-none"></div>
-
+                    
                     <div class="flex-1 flex flex-col justify-center">
                         <h4 class="text-tuvBlue font-bold text-[14px] md:text-base mb-3 flex items-center gap-2">
                             <svg class="w-4 h-4 md:w-5 md:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                            ${t().contactTitle}
+                            ${content().contactTitle}
                         </h4>
                         <p class="text-[12px] md:text-[13px] text-charcoal/70 leading-relaxed text-justify">
-                            ${t().contactDesc}
+                            ${content().contactDesc}
                         </p>
                     </div>
-
+                    
                     <div class="hidden md:block w-px bg-tuvBlue/10 self-stretch"></div>
                     <div class="md:hidden h-px w-full bg-tuvBlue/10"></div>
 
                     <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center shrink-0 w-full sm:w-auto">
                         <div class="space-y-3">
-                            <div class="text-[10px] uppercase font-mono tracking-widest text-muted font-bold">${t().contactUs}</div>
+                            <div class="text-[10px] uppercase font-mono tracking-widest text-muted font-bold">${content().contactUs}</div>
                             <div class="flex items-center gap-3 text-[12px] text-charcoal">
                                 <div class="w-7 h-7 rounded-full bg-tuvBlue/10 flex items-center justify-center text-tuvBlue shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -988,19 +947,19 @@
                                 <span class="font-mono font-medium text-[13px]">Evelyn.Tang@tuv.com</span>
                             </div>
                         </div>
-
+                        
                         <div class="flex gap-3 shrink-0 w-full sm:w-auto justify-center sm:justify-start self-center sm:self-auto">
                             <div class="flex flex-col items-center gap-1.5">
                                 <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
-                                    <img src="./qrcode.jpg" alt="${t().qr1Alt}" class="w-full h-full object-cover rounded-sm">
+                                    <img src="./qrcode.jpg" alt="${content().qr1Alt}" class="w-full h-full object-cover rounded-sm">
                                 </div>
-                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${t().followUs}</span>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${content().followUs}</span>
                             </div>
                             <div class="flex flex-col items-center gap-1.5">
                                 <div class="w-[64px] h-[64px] bg-white border border-tuvBlue/20 rounded-md flex items-center justify-center p-1 shadow-sm overflow-hidden">
-                                    <img src="./Registration.jpg" alt="${t().qr2Alt}" class="w-full h-full object-cover rounded-sm">
+                                    <img src="./Registration.jpg" alt="${content().qr2Alt}" class="w-full h-full object-cover rounded-sm">
                                 </div>
-                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${t().contactUsShort}</span>
+                                <span class="text-[9px] text-charcoal/60 tracking-wider font-medium">${content().contactShort}</span>
                             </div>
                         </div>
                     </div>
@@ -1064,7 +1023,7 @@
 
         function copyResult() {
             navigator.clipboard.writeText(getOutputs()[currentOutput]).then(() => {
-                alert(t().copyAlert);
+                alert(content().copyAlert);
             });
         }
 
